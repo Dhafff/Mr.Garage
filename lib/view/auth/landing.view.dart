@@ -3625,7 +3625,7 @@ class RegisterSuccess extends StatelessWidget {
               style: GoogleFonts.openSans(
                 fontSize: 17,
                 fontWeight: FontWeight.w600,
-                color: GlobalColors.textColor,
+                color: Colors.white,
               ),
             ),
           ],
