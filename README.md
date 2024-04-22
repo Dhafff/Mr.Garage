@@ -168,6 +168,11 @@ Jika jobdesk kamu sudah selesai dan ingin push ke GitHub, ikuti langkah ini.
   ```bash
   git branch [nama_kamu]
   ```
+  Jika sudah menambahkan branch, pindah ke branch yang sudah kamu buat.
+  ```bash
+  git checkout [branch_kamu]
+  ```
+  
 - Tambah perubahan
   
   Jika kamu menambahkan perubahan di kodingan, lakukan `git add [file kamu]`. Contoh saya ingin menambahkan file `montir_homepage.dart`
