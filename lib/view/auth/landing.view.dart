@@ -732,7 +732,6 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 }
-<<<<<<< Updated upstream
 
 // register loading (ketika daftar sukses)
 class RegisterLoading extends StatelessWidget {
@@ -824,8 +823,6 @@ void handleRegistrationSubmit(BuildContext context) async {
   // Navigasi ke halaman utama dan hapus semua rute sebelumnya
   Navigator.pushReplacement(
     context,
-    MaterialPageRoute(builder: (context) => const PelangganMainPage()), // Hapus semua rute sebelumnya
+    MaterialPageRoute(builder: (context) => const PelangganNavBar()), // Hapus semua rute sebelumnya
   );
 }
-=======
->>>>>>> Stashed changes
