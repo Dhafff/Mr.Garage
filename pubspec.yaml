@@ -50,6 +50,8 @@ dependencies:
   dropdown_button2: ^2.3.9
   carousel_slider: ^4.2.1
   google_nav_bar: ^5.0.6
+  persistent_bottom_nav_bar: ^5.0.2
+  material_symbols_icons: ^4.2719.3
 
 dev_dependencies:
   flutter_test:
@@ -80,8 +82,10 @@ flutter:
     - assets/img/logo/
     - assets/img/banner/
     - assets/img/vehicle/
+    - assets/img/product/
     - assets/img/icon/
     - assets/img/illustrator/
+    - assets/img/bengkel/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -150,7 +154,7 @@ flutter_native_splash:
   # parameters from above. If the image_dark parameter is specified, color_dark or
   # background_image_dark must be specified.  color_dark and background_image_dark cannot both be
   # set.
-  color_dark: "#1e1e1e"
+  #color_dark: "#31363F"
   #background_image_dark: "assets/dark-background.png"
   #image_dark: assets/img/logo/logo-mrgarage-splash_dark.png
   #branding_dark: assets/dart_dark.png
@@ -181,7 +185,7 @@ flutter_native_splash:
     # apply when the device is in dark mode. If they are not specified, the app will use the
     # parameters from above.
     #image_dark: assets/img/logo/logo-mrgarage-splash_dark.png
-    color_dark: "#1e1e1e"
+    #color_dark: "#31363F"
     #icon_background_color_dark: "#eeeeee"
 
   # The android, ios and web parameters can be used to disable generating a splash screen on a given
