@@ -2,15 +2,23 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+//import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:mr_garage/common/widgets/garage/garage_card.dart';
+import 'package:mr_garage/common/widgets/list_view_card/list_card.dart';
+import 'package:mr_garage/common/widgets/product/product_card.dart';
 import 'package:mr_garage/utils/global.colors.dart';
 import 'package:mr_garage/view/auth/landing.view.dart';
 import 'package:mr_garage/common/widgets/images/rounded_banner_images.dart';
 import 'package:mr_garage/features/vehicle/controller/home_vehicle_controller.dart';
 import 'package:mr_garage/common/widgets/vehicle/vehicle_vertical_scrollable.dart';
+import 'package:mr_garage/common/widgets/navigation/navigation_bar_drawer.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+
+import '../../../common/widgets/menu/menu.dart';
 
 class PelangganHomePage extends StatefulWidget {
   const PelangganHomePage({super.key});
@@ -68,7 +76,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                 valueListenable: waktuNotifier,
                 builder: (context, waktu, child) {
                   return Text(
-                    getWaktuSekarang(), // Hanya menampilkan waktu tanpa koma
+                    getWaktuSekarang(),
                     style: GoogleFonts.openSans(
                       color: GlobalColors.secondColor,
                       fontSize: 12,
@@ -148,7 +156,9 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                       ),
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    const NavigationBarDrawer();
+                  },
                 ),
               ],
             ),
@@ -158,7 +168,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
         titleSpacing: 0, // Hilangkan jarak antara judul dan leading icon
         automaticallyImplyLeading: false, // Hilangkan leading icon secara otomatis
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1),
+          preferredSize: const Size.fromHeight(10),
           child: Container(
             color: GlobalColors.garis,
             height: 1,
@@ -283,97 +293,14 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(100, 100),
-                        backgroundColor: HexColor('f5f5f5'),
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.build_outlined,
-                            size: 22,
-                            color: GlobalColors.textColor,
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            'Servis',
-                            style: GoogleFonts.openSans(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: HexColor('1e1e1e'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(100, 100),
-                        backgroundColor: HexColor('f5f5f5'),
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            FeatherIcons.shoppingCart,
-                            size: 22,
-                            color: GlobalColors.textColor,
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            'Belanja',
-                            style: GoogleFonts.openSans(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: HexColor('1e1e1e'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(100, 100),
-                        backgroundColor: HexColor('f5f5f5'),
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            'assets/img/icon/auto_towing.svg',
-                            width: 22,
-                            height: 22,
-                            color: GlobalColors.textColor,
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            'Derek',
-                            style: GoogleFonts.openSans(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: HexColor('1e1e1e'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    MenuMain(
+                        onPressed: () {
+                          _showModalService();
+                        },
+                        iconMenu: Icons.build_outlined,
+                        titleMenu: 'Servis'),
+                    MenuMain(onPressed: () {}, iconMenu: FeatherIcons.shoppingCart, titleMenu: 'Belanja'),
+                    MenuMain(onPressed: () {}, iconMenu: Symbols.auto_towing_rounded, titleMenu: 'Derek'),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -464,205 +391,22 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                   ],
                 ),
                 const SizedBox(height: 15),
-                Container(
-                  width: double.infinity,
-                  height: 75,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: GlobalColors.garis,
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 45,
-                              height: 45,
-                              decoration: BoxDecoration(
-                                color: HexColor('F2BE00'),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(
-                                Icons.build_outlined,
-                                size: 20,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Servis kendaraan',
-                                  style: GoogleFonts.openSans(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: GlobalColors.textColor),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  '7 Nov 2022 • Sedang di servis',
-                                  style: GoogleFonts.openSans(
-                                    fontSize: 11,
-                                    color: GlobalColors.thirdColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Icon(
-                            FeatherIcons.arrowRight,
-                            size: 20,
-                            color: GlobalColors.textColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                ListCardService(
+                  onTap: () {},
+                  color: HexColor('F2BE00'),
+                  subtitleList: '7 Nov 2022 • Sedang di servis',
                 ),
                 const SizedBox(height: 15),
-                Container(
-                  width: double.infinity,
-                  height: 75,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: GlobalColors.garis,
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 45,
-                              height: 45,
-                              decoration: BoxDecoration(
-                                color: HexColor('E82327'),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(
-                                Icons.build_outlined,
-                                size: 20,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Servis kendaraan',
-                                  style: GoogleFonts.openSans(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: GlobalColors.textColor),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  '5 Nov 2022 • Servis dibatalkan',
-                                  style: GoogleFonts.openSans(
-                                    fontSize: 11,
-                                    color: GlobalColors.thirdColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Icon(
-                            FeatherIcons.arrowRight,
-                            size: 20,
-                            color: GlobalColors.textColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                ListCardService(
+                  onTap: () {},
+                  color: Colors.green,
+                  subtitleList: '5 Nov 2022 • Servis berhasil',
                 ),
                 const SizedBox(height: 15),
-                Container(
-                  width: double.infinity,
-                  height: 75,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: GlobalColors.garis,
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 45,
-                              height: 45,
-                              decoration: BoxDecoration(
-                                color: HexColor('2FDD92'),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(
-                                Icons.build_outlined,
-                                size: 20,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Servis kendaraan',
-                                  style: GoogleFonts.openSans(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: GlobalColors.textColor),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  '7 Nov 2022 • Servis berhasil',
-                                  style: GoogleFonts.openSans(
-                                    fontSize: 11,
-                                    color: GlobalColors.thirdColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Icon(
-                            FeatherIcons.arrowRight,
-                            size: 20,
-                            color: GlobalColors.textColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                ListCardService(
+                  onTap: () {},
+                  color: Colors.red,
+                  subtitleList: '5 Nov 2022 • Servis dibatalkan',
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -715,10 +459,141 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                     )
                   ],
                 ),
-                const SizedBox(height: 50),
+
+                const SizedBox(height: 15),
+
+                // Produk Promo Slider
+                SizedBox(
+                  height: 264,
+                  child: ListView(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      ProductCard(
+                        onTap: () {},
+                        imageUrl: 'assets/img/product/cvt.png',
+                        productTitle: 'Cvt Yamaha X-ride',
+                        productPrice: '1.000.000',
+                        productCategory: 'motor',
+                        discount: '50',
+                      ),
+                      SizedBox(width: 20),
+                      ProductCard(
+                        onTap: () {},
+                        imageUrl: 'assets/img/product/ban_michellin.png',
+                        productTitle: 'Ban Michellin Pilot Ring',
+                        productPrice: '480.000',
+                        productCategory: 'motor',
+                        discount: '20',
+                      ),
+                      SizedBox(width: 20),
+                      ProductCard(
+                        onTap: () {},
+                        imageUrl: 'assets/img/product/ban_bridgestone.png',
+                        productTitle: 'Bridgestone Dueler',
+                        productPrice: '975.000',
+                        productCategory: 'mobil',
+                        discount: '35',
+                      ),
+                      SizedBox(width: 20),
+                      ProductCard(
+                        onTap: () {},
+                        imageUrl: 'assets/img/product/aki_gs.png',
+                        productTitle: 'Aki Mobil Innova Diesel',
+                        productPrice: '1.293.000',
+                        productCategory: 'mobil',
+                        discount: '40',
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: GlobalColors.mainColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.garage_outlined,
+                            color: Colors.white,
+                            size: 15,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Bengkel terdekat',
+                          style: GoogleFonts.openSans(
+                            color: GlobalColors.textColor,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: GlobalColors.mainColor,
+                        minimumSize: const Size(80, 30),
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Lihat semua',
+                        style: GoogleFonts.openSans(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 15),
+                SizedBox(
+                  height: 264,
+                  child: ListView(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      GarageCard(
+                        onTap: () {},
+                        imageUrl: 'assets/img/bengkel/bengkel-1.png',
+                        garageTitle: 'Bengkel Ajwa',
+                        garageDesc: 'Jl. Telekomunikasi No.203 Bojongsoang, Bandung',
+                      ),
+                      SizedBox(width: 20),
+                      GarageCard(
+                        onTap: () {},
+                        imageUrl: 'assets/img/bengkel/bengkel-2.jpg',
+                        garageTitle: 'Tambal ban sukapura',
+                        garageDesc: 'Jl. Sukapura No.69 Dayeuhkolot, Bandung',
+                      ),
+                      SizedBox(width: 20),
+                      GarageCard(
+                        onTap: () {},
+                        imageUrl: 'assets/img/bengkel/bengkel-3.jpg',
+                        garageTitle: 'Bengkel Jaya Motor',
+                        garageDesc: 'Jl. Raya Bojongsoang No.50 Bojongsoang, Bandung',
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LandingPage()));
+                    navigateToLandingPage();
                   },
                   child: Text('Logout'),
                 ),
@@ -727,6 +602,132 @@ class _PelangganHomeState extends State<PelangganHomePage> {
           ),
         ),
       ),
+    );
+  }
+
+  void navigateToLandingPage() {
+    PersistentNavBarNavigator.pushNewScreen(
+      context,
+      screen: const LandingPage(),
+      withNavBar: false, // OPTIONAL VALUE. True by default.
+      pageTransitionAnimation: PageTransitionAnimation.cupertino,
+    );
+  }
+
+  _showModalService() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15),
+          topRight: Radius.circular(15),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          height: 300,
+          child: Column(
+            children: [
+              const SizedBox(height: 5),
+              Container(
+                height: 5,
+                width: 40,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30, left: 30, right: 30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Servis',
+                      style: GoogleFonts.openSans(
+                          fontSize: 18, fontWeight: FontWeight.w600, color: GlobalColors.textColor),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Mau servis dimana?',
+                      style: GoogleFonts.openSans(
+                        fontSize: 13,
+                        color: GlobalColors.thirdColor,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(165, 135),
+                            backgroundColor: HexColor('eeeeee'),
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/img/icon/icons8-garage.png',
+                                width: 50,
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                'Bengkel',
+                                style: GoogleFonts.openSans(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: HexColor('1e1e1e'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(165, 135),
+                            backgroundColor: HexColor('eeeeee'),
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/img/icon/icons8-home.png',
+                                width: 50,
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                'Rumah',
+                                style: GoogleFonts.openSans(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: HexColor('1e1e1e'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
