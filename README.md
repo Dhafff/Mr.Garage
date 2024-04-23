@@ -70,20 +70,6 @@ assets:
 
 ## Import plugin flutter
 
-=======
-    - assets/
-    - assets/animation/
-    - assets/img/
-    - assets/img/logo/
-    - assets/img/banner/
-    - assets/img/vehicle/
-    - assets/img/icon/
-    - assets/img/illustrator/
-    #- assets/img/folder_baru_kamu/  -- Simpan alamatnya disini
-```
-
-## Import plugin flutter
->>>>>>> 6c3c5df8ef34c8a0ec9953c634ceb1ae7ecdfcca
 Jika kamu ingin import pluggin flutter, taruh di bagian `dependencies` di file `pubspec.yaml`.
 
 ```yaml
@@ -95,20 +81,11 @@ dependencies:
 Lalu save.
 
 ## Penggunaan warna
-<<<<<<< HEAD
 
 Untuk projek ini, disediakan `utils` yang berisi utility mengenai warna, notifikasi, dan ambil foto. Saya akan menjelaskan mengenai penggunaan warna di proyek ini.
 
 Untuk penggunaan warna, telah disediakan 6 warna, antara lain:
-
 - Warna utama, dengan hex code `#007EA7` (Biru). Jika dibutuhkan, kalian cukup panggil kode `GlobalColors.mainColor` untuk mengubah warna. Contoh:
-
-=======
-Untuk projek ini, disediakan `utils` yang berisi utility mengenai warna, notifikasi, dan ambil foto. Saya akan menjelaskan mengenai penggunaan warna di proyek ini.
-
-Untuk penggunaan warna, telah disediakan 6 warna, antara lain:
-- Warna utama, dengan hex code `#007EA7` (Biru). Jika dibutuhkan, kalian cukup panggil kode `GlobalColors.mainColor` untuk mengubah warna. Contoh:
->>>>>>> 6c3c5df8ef34c8a0ec9953c634ceb1ae7ecdfcca
 ```dart
   Container(
    decoration: BoxDecoration(
@@ -118,10 +95,6 @@ Untuk penggunaan warna, telah disediakan 6 warna, antara lain:
    colors: GlobalColors.mainColor, // Warna yang kalian ingin ubah
   )
 ```
-<<<<<<< HEAD
-
-=======
->>>>>>> 6c3c5df8ef34c8a0ec9953c634ceb1ae7ecdfcca
 - Warna kedua, dengan hex code `#969696` (Abu agak terang), panggil kode `GlobalColors.secondColor` untuk mengubah warna.
 - Warna ketiga, dengan hex code `#797979` (Abu agak gelap), panggil kode `GlobalColors.thirdColor` untuk mengubah warna.
 - Warna teks, dengan hex code `#00171F` (Hitam-biru), panggil kode `GlobalColors.textColor` untuk mengubah warna.
@@ -129,13 +102,8 @@ Untuk penggunaan warna, telah disediakan 6 warna, antara lain:
 - Terakhir, warna biru kedua atau warna sekunder, dengan hex code `#0AC2FF` (Biru terang), panggil kode `GlobalColors.backLoginColor` untuk mengubah warna.
 
 ## Penggunaan kamera
-<<<<<<< HEAD
 
 Jika anda diberi jobdesk yang salah satunya ambil foto, silahkan ikuti tata cara berikut.
-
-=======
-Jika anda diberi jobdesk yang salah satunya ambil foto, silahkan ikuti tata cara berikut.
->>>>>>> 6c3c5df8ef34c8a0ec9953c634ceb1ae7ecdfcca
 - Inisialisasi 2 variable untuk menaruh `Uint8List` sebagai tempat foto dan `File` sebagai file fotonya.
   ```dart
   Uint8List? _image
@@ -164,7 +132,6 @@ Jika anda diberi jobdesk yang salah satunya ambil foto, silahkan ikuti tata cara
   ```
 - Setelahnya, buat sebuah method mengambil gambar. Untuk method disini dibagi menjadi 2, yaitu `_pickImageFromGallery` dan `_pickImageFromCamera`.
   - `_pickImageFromGallery`. Ambil gambar di galeri.
-<<<<<<< HEAD
   ```dart
   Future _pickImageFromGallery() async {
    final returnImage = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -176,19 +143,7 @@ Jika anda diberi jobdesk yang salah satunya ambil foto, silahkan ikuti tata cara
    Navigator.of(context).pop();
   }
   ```
-=======
-   ```dart
-   Future _pickImageFromGallery() async {
-    final returnImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (returnImage == null) return;
-    setState(() {
-      selectedImage = File(returnImage.path);
-      _image = File(returnImage.path).readAsBytesSync();
-    });
-    Navigator.of(context).pop();
-   }
-   ```
->>>>>>> 6c3c5df8ef34c8a0ec9953c634ceb1ae7ecdfcca
+  
   - `_pickImageFromCamera`. Ambil gambar menggunakan camera.
   ```dart
   Future _pickImageFromCamera() async {
@@ -204,19 +159,7 @@ Jika anda diberi jobdesk yang salah satunya ambil foto, silahkan ikuti tata cara
   Catatan: Taruh method diluar Widget.
 
 ## Push ke GitHub
-<<<<<<< HEAD
 
-Jika jobdesk kamu sudah selesai dan ingin push ke GitHub, ikuti langkah ini.
-
-- Buka Git Bash
-
-  Buka Git Bash kamu di folder utama Mr.Garage, dengan cara klik kanan di dalam folder utama Mr.Garage, pilih `open Git Bash here`
-
-- Konfigurasi Git
-
-  Jika kamu belum melakukan konfigurasi, silahkan konfigurasi dengan username dan email kamu.
-
-=======
 Jika jobdesk kamu sudah selesai dan ingin push ke GitHub, ikuti langkah ini.
 - Buka Git Bash
   
@@ -225,84 +168,12 @@ Jika jobdesk kamu sudah selesai dan ingin push ke GitHub, ikuti langkah ini.
 - Konfigurasi Git
 
   Jika kamu belum melakukan konfigurasi, silahkan konfigurasi dengan username dan email kamu.
->>>>>>> 6c3c5df8ef34c8a0ec9953c634ceb1ae7ecdfcca
+  
   ```bash
   git config --global user.name "Your Name"
   git config --global user.email "youremail@example.com"
   ```
-<<<<<<< HEAD
-
-- Tambah branch
-
-  Tambahkan branch untuk menyimpan perubahan kamu ke dalam branch kamu sendiri.
-
-  ```bash
-  git branch [nama_kamu]
-  ```
-
-  Jika sudah menambahkan branch, pindah ke branch yang sudah kamu buat.
-
-  ```bash
-  git checkout [branch_kamu]
-  ```
-
-- Tambah perubahan
-
-  Jika kamu menambahkan perubahan di kodingan, lakukan `git add [file kamu]`. Contoh saya ingin menambahkan file `montir_homepage.dart`
-
-  ```bash
-  git add lib/view/montir/home/montir_homepage.dart
-  ```
-
-  Jika kamu ingin menambahkan seluruh folder yang berisi file kodingan kamu, gunakan '\*' untuk menambahkan semua file yang ada di dalam folder.
-
-  ```bash
-  git add lib/view/pelanggan/service/*
-  ```
-
-- Commit
-
-  Setelah menambahkan perubahan/file/kodingan, lakukan `git commit` untuk commit perubahan yang telah dibuat.
-
-  ```bash
-  git commit -m "menambahkan file montir_homepage.dart di folder montir/home"
-  ```
-
-- Remote repository
-
-  Setelah melakukan commit, tambahkan repository ini ke dalam Git Bash kamu.
-
-  ```bash
-  git remote add origin https://github.com/Dhafff/Mr.Garage-Mobile.git
-  ```
-
-- Push
-
-  Setelah melakukan remote repository, push ke branch kamu di repositori.
-
-  ```bash
-  git push -u origin [branch_kamu]
-  ```
-
-- Pindah branch
-
-  Setelah melakukan push, pindah ke branch `main`
-
-  ```bash
-  git checkout main
-  ```
-
-- Gabung branch kamu ke `main`
-
-  Setelah pindah branch, gabung branch kamu ke `main`
-
-  ```bash
-  git merge [branch_kamu]
-  ```
-
-- Push main
-=======
-  
+    
 - Tambah branch
   
   Tambahkan branch untuk menyimpan perubahan kamu ke dalam branch kamu sendiri.
@@ -362,23 +233,16 @@ Jika jobdesk kamu sudah selesai dan ingin push ke GitHub, ikuti langkah ini.
   
 - Push main
   
->>>>>>> 6c3c5df8ef34c8a0ec9953c634ceb1ae7ecdfcca
   Terakhir, push perubahan yg telah kamu buat ke repository
   ```bash
   git push origin main
   ```
-<<<<<<< HEAD
+
   Catatan: Setelah push di main, pindah lagi ke branch kamu dengan cara `git checkout [branch_kamu]`.
   Jika ada kendala, silahkan hubungi saya di grup.
 
 ## Akhir Kata
 
-=======
-Catatan: Setelah push di main, pindah lagi ke branch kamu dengan cara `git checkout [branch_kamu]`.
-Jika ada kendala, silahkan hubungi saya di grup.
-
-## Akhir Kata
->>>>>>> 6c3c5df8ef34c8a0ec9953c634ceb1ae7ecdfcca
 Untuk saat ini, cukup sampai sini saya menjelaskan. Jika ada kendala atau kurang paham, silahkan kontak saya untuk informasi lebih lanjut.
 
 Terimakasih. Saya harap readme ini membantu kamu untuk ngoding aplkasi Mr.Garage.
