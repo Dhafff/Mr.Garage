@@ -11,12 +11,13 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/widgets/snackbar/custom_snackbar.dart';
 import '../../../utils/global.colors.dart';
 import '../../../utils/notification.controller.dart';
 import '../landing.view.dart';
-import 'handle_registration.dart';
+import 'handle_registration.dart' as handler;
 
 class RegisterPelangganPage extends StatefulWidget {
   const RegisterPelangganPage({super.key});
@@ -322,7 +323,7 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
                       ),
                       OutlinedButton(
                         onPressed: () {
-                          handleRegistrationSubmit(context);
+                          handler.handleRegistrationSubmit(context);
                         },
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(
@@ -350,7 +351,7 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
           },
         );
       } else {
-        handleRegistrationSubmit(context);
+        handler.handleRegistrationSubmit(context);
       }
     }
   }
@@ -1188,22 +1189,38 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
   }
 
   Future _pickImageFromGallery() async {
-    final returnImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (returnImage == null) return;
-    setState(() {
-      selectedImage = File(returnImage.path);
-      _image = File(returnImage.path).readAsBytesSync();
-    });
-    Navigator.of(context).pop();
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+      status = await Permission.storage.status;
+    }
+
+    if (status.isGranted) {
+      final returnImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (returnImage == null) return;
+      setState(() {
+        selectedImage = File(returnImage.path);
+        _image = File(returnImage.path).readAsBytesSync();
+      });
+      Navigator.of(context).pop();
+    }
   }
 
   Future _pickImageFromCamera() async {
-    final returnImage = await ImagePicker().pickImage(source: ImageSource.camera);
-    if (returnImage == null) return;
-    setState(() {
-      selectedImage = File(returnImage.path);
-      _image = File(returnImage.path).readAsBytesSync();
-    });
-    Navigator.of(context).pop();
+    var status = await Permission.camera.status;
+    if (!status.isGranted) {
+      await Permission.camera.request();
+      status = await Permission.camera.status;
+    }
+
+    if (status.isGranted) {
+      final returnImage = await ImagePicker().pickImage(source: ImageSource.camera);
+      if (returnImage == null) return;
+      setState(() {
+        selectedImage = File(returnImage.path);
+        _image = File(returnImage.path).readAsBytesSync();
+      });
+      Navigator.of(context).pop();
+    }
   }
 }

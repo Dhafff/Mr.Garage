@@ -49,9 +49,9 @@ dependencies:
   lottie: ^3.1.0
   dropdown_button2: ^2.3.9
   carousel_slider: ^4.2.1
-  google_nav_bar: ^5.0.6
   persistent_bottom_nav_bar: ^5.0.2
   material_symbols_icons: ^4.2719.3
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:

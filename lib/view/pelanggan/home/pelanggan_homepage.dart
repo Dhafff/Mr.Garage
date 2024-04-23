@@ -9,13 +9,17 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:mr_garage/common/widgets/garage/garage_card.dart';
 import 'package:mr_garage/common/widgets/list_view_card/list_card.dart';
+import 'package:mr_garage/common/widgets/modal/modal_chooser.dart';
 import 'package:mr_garage/common/widgets/product/product_card.dart';
 import 'package:mr_garage/utils/global.colors.dart';
 import 'package:mr_garage/view/auth/landing.view.dart';
 import 'package:mr_garage/common/widgets/images/rounded_banner_images.dart';
 import 'package:mr_garage/features/vehicle/controller/home_vehicle_controller.dart';
 import 'package:mr_garage/common/widgets/vehicle/vehicle_vertical_scrollable.dart';
-import 'package:mr_garage/common/widgets/navigation/navigation_bar_drawer.dart';
+import 'package:mr_garage/view/pelanggan/notification/pelanggan_notification.dart';
+import 'package:mr_garage/view/pelanggan/profile/pelanggan_profile.dart';
+import 'package:mr_garage/view/pelanggan/service/service_garage.dart';
+import 'package:mr_garage/view/pelanggan/shop/navbar/shop_navbar.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../../common/widgets/menu/menu.dart';
@@ -67,6 +71,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.white,
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
@@ -118,7 +123,14 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                           color: Colors.white,
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        PersistentNavBarNavigator.pushNewScreen(
+                          context,
+                          screen: const PelangganNotification(),
+                          withNavBar: false,
+                          pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                        );
+                      },
                     ),
                     Positioned(
                       top: -2,
@@ -157,7 +169,12 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                     ),
                   ),
                   onTap: () {
-                    const NavigationBarDrawer();
+                    PersistentNavBarNavigator.pushNewScreen(
+                      context,
+                      screen: const PelangganProfile(),
+                      withNavBar: false,
+                      pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                    );
                   },
                 ),
               ],
@@ -294,12 +311,24 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     MenuMain(
-                        onPressed: () {
-                          _showModalService();
-                        },
-                        iconMenu: Icons.build_outlined,
-                        titleMenu: 'Servis'),
-                    MenuMain(onPressed: () {}, iconMenu: FeatherIcons.shoppingCart, titleMenu: 'Belanja'),
+                      onPressed: () {
+                        _showModalService();
+                      },
+                      iconMenu: Icons.build_outlined,
+                      titleMenu: 'Servis',
+                    ),
+                    MenuMain(
+                      onPressed: () {
+                        PersistentNavBarNavigator.pushNewScreen(
+                          context,
+                          screen: ShopNavbar(),
+                          withNavBar: false,
+                          pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                        );
+                      },
+                      iconMenu: FeatherIcons.shoppingCart,
+                      titleMenu: 'Belanja',
+                    ),
                     MenuMain(onPressed: () {}, iconMenu: Symbols.auto_towing_rounded, titleMenu: 'Derek'),
                   ],
                 ),
@@ -464,7 +493,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
 
                 // Produk Promo Slider
                 SizedBox(
-                  height: 264,
+                  height: 233,
                   child: ListView(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
@@ -561,7 +590,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                 ),
                 const SizedBox(height: 15),
                 SizedBox(
-                  height: 264,
+                  height: 233,
                   child: ListView(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
@@ -588,14 +617,6 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                       ),
                     ],
                   ),
-                ),
-
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    navigateToLandingPage();
-                  },
-                  child: Text('Logout'),
                 ),
               ],
             ),
@@ -625,107 +646,22 @@ class _PelangganHomeState extends State<PelangganHomePage> {
         ),
       ),
       builder: (BuildContext context) {
-        return Container(
-          height: 300,
-          child: Column(
-            children: [
-              const SizedBox(height: 5),
-              Container(
-                height: 5,
-                width: 40,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30, left: 30, right: 30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Servis',
-                      style: GoogleFonts.openSans(
-                          fontSize: 18, fontWeight: FontWeight.w600, color: GlobalColors.textColor),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Mau servis dimana?',
-                      style: GoogleFonts.openSans(
-                        fontSize: 13,
-                        color: GlobalColors.thirdColor,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(165, 135),
-                            backgroundColor: HexColor('eeeeee'),
-                            shadowColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/img/icon/icons8-garage.png',
-                                width: 50,
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                'Bengkel',
-                                style: GoogleFonts.openSans(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: HexColor('1e1e1e'),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(165, 135),
-                            backgroundColor: HexColor('eeeeee'),
-                            shadowColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/img/icon/icons8-home.png',
-                                width: 50,
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                'Rumah',
-                                style: GoogleFonts.openSans(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: HexColor('1e1e1e'),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
+        return ModalChooser(
+          modalTitle: 'Servis',
+          modalDesc: 'Mau servis di mana hari ini?',
+          imgUrl1: 'assets/img/icon/icons8-garage.png',
+          imgLabel1: 'Bengkel',
+          onPressed1: () {
+            PersistentNavBarNavigator.pushNewScreen(
+              context,
+              screen: ServiceGarage(),
+              withNavBar: false, // OPTIONAL VALUE. True by default.
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            );
+          },
+          imgUrl2: 'assets/img/icon/icons8-home.png',
+          imgLabel2: 'Rumah',
+          onPressed2: () {},
         );
       },
     );

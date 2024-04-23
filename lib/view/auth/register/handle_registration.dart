@@ -17,7 +17,10 @@ class RegisterLoading extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
-              child: CircularProgressIndicator(backgroundColor: GlobalColors.mainColor),
+              child: CircularProgressIndicator(
+                backgroundColor: GlobalColors.garis,
+                color: GlobalColors.mainColor,
+              ),
             ),
             const SizedBox(height: 20),
             Text(
