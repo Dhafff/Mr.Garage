@@ -17,7 +17,7 @@ import '../../../common/widgets/snackbar/custom_snackbar.dart';
 import '../../../utils/global.colors.dart';
 import '../../../utils/notification.controller.dart';
 import '../landing.view.dart';
-import 'handle_registration.dart';
+import 'handle_registration.dart' as handler;
 
 class RegisterMontirPage extends StatefulWidget {
   const RegisterMontirPage({super.key});
@@ -398,7 +398,7 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
                         ),
                         OutlinedButton(
                           onPressed: () {
-                            handleRegistrationSubmit(context);
+                            handler.handleRegistrationSubmit(context);
                           },
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(
@@ -426,7 +426,7 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
             },
           );
         } else {
-          handleRegistrationSubmit(context);
+          handler.handleRegistrationSubmit(context);
         }
       }
     }

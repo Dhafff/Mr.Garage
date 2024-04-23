@@ -16,7 +16,7 @@ import '../../../common/widgets/snackbar/custom_snackbar.dart';
 import '../../../utils/global.colors.dart';
 import '../../../utils/notification.controller.dart';
 import '../landing.view.dart';
-import 'handle_registration.dart';
+import 'handle_registration.dart' as handler;
 
 class RegisterPelangganPage extends StatefulWidget {
   const RegisterPelangganPage({super.key});
@@ -322,7 +322,7 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
                       ),
                       OutlinedButton(
                         onPressed: () {
-                          handleRegistrationSubmit(context);
+                          handler.handleRegistrationSubmit(context);
                         },
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(
@@ -350,7 +350,7 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
           },
         );
       } else {
-        handleRegistrationSubmit(context);
+        handler.handleRegistrationSubmit(context);
       }
     }
   }
