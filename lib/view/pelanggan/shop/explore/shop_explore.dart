@@ -5,7 +5,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_garage/common/widgets/categories/shop_categories.dart';
 import 'package:mr_garage/view/pelanggan/navbar/pelanggan_navbar.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../../../common/widgets/images/rounded_banner_images.dart';
 import '../../../../common/widgets/product/product_card.dart';
@@ -14,6 +14,7 @@ import '../../../../utils/global.colors.dart';
 class ShopExplore extends StatefulWidget {
   const ShopExplore({super.key});
 
+  @override
   _ShopExploreState createState() => _ShopExploreState();
 }
 
@@ -33,14 +34,21 @@ class _ShopExploreState extends State<ShopExplore> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      PersistentNavBarNavigator.pushNewScreen(
+                      pushScreen(
                         context,
-                        screen: PelangganNavBar(),
+                        screen: const PelangganNavBar(),
                         withNavBar: false,
                         pageTransitionAnimation: PageTransitionAnimation.cupertino,
                       );
                     },
-                    child: Icon(FeatherIcons.arrowLeft),
+                    child: const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: Icon(
+                        FeatherIcons.arrowLeft,
+                        size: 20,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 20),
                   Text(
@@ -113,21 +121,21 @@ class _ShopExploreState extends State<ShopExplore> {
                   ),
                   items: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: RoundedBannerImage(
                         imageUrl: 'assets/img/banner/banner-1.jpg',
                         onPressed: () {},
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: RoundedBannerImage(
                         imageUrl: 'assets/img/banner/banner-2.jpg',
                         onPressed: () {},
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: RoundedBannerImage(
                         imageUrl: 'assets/img/banner/banner-3.jpg',
                         onPressed: () {},
@@ -230,7 +238,7 @@ class _ShopExploreState extends State<ShopExplore> {
                         productCategory: 'motor',
                         discount: '50',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/ban_michellin.png',
@@ -239,7 +247,7 @@ class _ShopExploreState extends State<ShopExplore> {
                         productCategory: 'motor',
                         discount: '20',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/ban_bridgestone.png',
@@ -248,7 +256,7 @@ class _ShopExploreState extends State<ShopExplore> {
                         productCategory: 'mobil',
                         discount: '35',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/aki_gs.png',
@@ -312,7 +320,7 @@ class _ShopExploreState extends State<ShopExplore> {
                         productCategory: 'motor',
                         discount: '50',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/ban_michellin.png',
@@ -321,7 +329,7 @@ class _ShopExploreState extends State<ShopExplore> {
                         productCategory: 'motor',
                         discount: '20',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/ban_bridgestone.png',
@@ -330,7 +338,7 @@ class _ShopExploreState extends State<ShopExplore> {
                         productCategory: 'mobil',
                         discount: '35',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/aki_gs.png',
@@ -394,7 +402,7 @@ class _ShopExploreState extends State<ShopExplore> {
                         productCategory: 'motor',
                         discount: '50',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/ban_michellin.png',
@@ -403,7 +411,7 @@ class _ShopExploreState extends State<ShopExplore> {
                         productCategory: 'motor',
                         discount: '20',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/ban_bridgestone.png',
@@ -412,7 +420,7 @@ class _ShopExploreState extends State<ShopExplore> {
                         productCategory: 'mobil',
                         discount: '35',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/aki_gs.png',
@@ -476,7 +484,7 @@ class _ShopExploreState extends State<ShopExplore> {
                         productCategory: 'motor',
                         discount: '50',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/ban_michellin.png',
@@ -485,7 +493,7 @@ class _ShopExploreState extends State<ShopExplore> {
                         productCategory: 'motor',
                         discount: '20',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/ban_bridgestone.png',
@@ -494,7 +502,7 @@ class _ShopExploreState extends State<ShopExplore> {
                         productCategory: 'mobil',
                         discount: '35',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/aki_gs.png',

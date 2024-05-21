@@ -18,12 +18,12 @@ class MenuMain extends StatelessWidget {
   final IconData iconMenu;
   final String titleMenu;
 
+  @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         minimumSize: const Size(100, 100),
-        backgroundColor: HexColor('f5f5f5'),
         shadowColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: isRounded ? BorderRadius.circular(15) : BorderRadius.circular(0),

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -20,7 +22,7 @@ import 'package:mr_garage/view/pelanggan/notification/pelanggan_notification.dar
 import 'package:mr_garage/view/pelanggan/profile/pelanggan_profile.dart';
 import 'package:mr_garage/view/pelanggan/service/service_garage.dart';
 import 'package:mr_garage/view/pelanggan/shop/navbar/shop_navbar.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../../common/widgets/menu/menu.dart';
 
@@ -32,6 +34,10 @@ class PelangganHomePage extends StatefulWidget {
 }
 
 class _PelangganHomeState extends State<PelangganHomePage> {
+  // variable
+  String photoUrl = '';
+  User? user = FirebaseAuth.instance.currentUser;
+
   // controller vehicle
   final controllerVehicle = Get.put(HomeVehicleController());
 
@@ -43,10 +49,33 @@ class _PelangganHomeState extends State<PelangganHomePage> {
     super.initState();
     waktuNotifier.value = getWaktuSekarang();
     updateWaktu();
+    fetchPhotoUrl();
+  }
+
+  Future<void> fetchPhotoUrl() async {
+    String fetchedPhotoUrl = await getPhotoUrlFromFirestore();
+    setState(() {
+      photoUrl = fetchedPhotoUrl;
+    });
+  }
+
+  Future<String> getPhotoUrlFromFirestore() async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('Users').where('userId', isEqualTo: user?.uid).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      var userDoc = querySnapshot.docs.first;
+      var userData = userDoc.data() as Map<String, dynamic>;
+      if (userData.containsKey('photoUrl')) {
+        return userData['photoUrl'];
+      }
+    }
+
+    return '';
   }
 
   updateWaktu() {
-    Timer.periodic(Duration(minutes: 1), (timer) {
+    Timer.periodic(const Duration(minutes: 1), (timer) {
       waktuNotifier.value = getWaktuSekarang();
     });
     waktuNotifier.value = getWaktuSekarang(); // Set nilai awal
@@ -90,13 +119,85 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                 },
               ),
               const SizedBox(height: 5),
-              Text(
-                'Dhafa',
-                style: GoogleFonts.openSans(
-                  color: GlobalColors.textColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+              StreamBuilder<User?>(
+                stream: FirebaseAuth.instance.authStateChanges(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text(
+                      '...',
+                      style: GoogleFonts.openSans(
+                        color: GlobalColors.textColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  }
+                  if (snapshot.hasData) {
+                    return FutureBuilder(
+                      future: FirebaseFirestore.instance.collection('Users').doc(snapshot.data!.uid).get(),
+                      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> userSnapshot) {
+                        if (userSnapshot.connectionState == ConnectionState.waiting) {
+                          return Text(
+                            '...',
+                            style: GoogleFonts.openSans(
+                              color: GlobalColors.textColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }
+                        if (userSnapshot.hasError) {
+                          return Text(
+                            'Terjadi kesalahan: ${userSnapshot.error}',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: GoogleFonts.openSans(
+                              color: GlobalColors.textColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }
+
+                        // Ambil nama pengguna dari Firestore
+                        if (userSnapshot.data!.exists) {
+                          var userData = userSnapshot.data!.data() as Map<String, dynamic>;
+                          var fullName = userData['username'];
+                          List<String> nameParts = fullName.split(" ");
+                          var username = nameParts[0];
+
+                          // Tampilkan nama pengguna di dalam App Bar
+                          return Text(
+                            username,
+                            style: GoogleFonts.openSans(
+                              color: GlobalColors.textColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        } else {
+                          return Text(
+                            '-',
+                            style: GoogleFonts.openSans(
+                              color: GlobalColors.textColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  } else {
+                    return Text(
+                      'Tamu',
+                      style: GoogleFonts.openSans(
+                        color: GlobalColors.textColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  }
+                },
               ),
             ],
           ),
@@ -124,7 +225,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                         ),
                       ),
                       onTap: () {
-                        PersistentNavBarNavigator.pushNewScreen(
+                        pushScreen(
                           context,
                           screen: const PelangganNotification(),
                           withNavBar: false,
@@ -162,14 +263,16 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                         color: GlobalColors.garis,
                         width: 1,
                       ),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/img/icon/user-icon.jpg'),
+                      image: DecorationImage(
+                        image: photoUrl.isNotEmpty
+                            ? NetworkImage(photoUrl) as ImageProvider<Object>
+                            : const AssetImage('assets/img/icon/user-icon.jpg'),
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
                   onTap: () {
-                    PersistentNavBarNavigator.pushNewScreen(
+                    pushScreen(
                       context,
                       screen: const PelangganProfile(),
                       withNavBar: false,
@@ -184,13 +287,6 @@ class _PelangganHomeState extends State<PelangganHomePage> {
         toolbarHeight: 70, // Atur tinggi AppBar sesuai kebutuhan
         titleSpacing: 0, // Hilangkan jarak antara judul dan leading icon
         automaticallyImplyLeading: false, // Hilangkan leading icon secara otomatis
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(10),
-          child: Container(
-            color: GlobalColors.garis,
-            height: 1,
-          ),
-        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -202,7 +298,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                 Container(
                   width: double.infinity,
                   height: 120,
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: GlobalColors.mainColor,
                     borderRadius: BorderRadius.circular(15),
@@ -234,7 +330,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                                               : HexColor('e5e5e5'),
                                           borderRadius: BorderRadius.circular(3),
                                         ),
-                                        margin: EdgeInsets.only(bottom: 3),
+                                        margin: const EdgeInsets.only(bottom: 3),
                                       ),
                                   ],
                                 ),
@@ -272,7 +368,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                       const SizedBox(width: 20),
                       GestureDetector(
                         onTap: () {},
-                        child: Container(
+                        child: SizedBox(
                           width: 55,
                           height: 50,
                           child: Column(
@@ -319,9 +415,9 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                     ),
                     MenuMain(
                       onPressed: () {
-                        PersistentNavBarNavigator.pushNewScreen(
+                        pushScreen(
                           context,
-                          screen: ShopNavbar(),
+                          screen: const ShopNavbar(),
                           withNavBar: false,
                           pageTransitionAnimation: PageTransitionAnimation.cupertino,
                         );
@@ -329,7 +425,11 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                       iconMenu: FeatherIcons.shoppingCart,
                       titleMenu: 'Belanja',
                     ),
-                    MenuMain(onPressed: () {}, iconMenu: Symbols.auto_towing_rounded, titleMenu: 'Derek'),
+                    MenuMain(
+                      onPressed: () {},
+                      iconMenu: Symbols.auto_towing_rounded,
+                      titleMenu: 'Derek',
+                    ),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -344,21 +444,21 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                   ),
                   items: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: RoundedBannerImage(
                         imageUrl: 'assets/img/banner/banner-1.jpg',
                         onPressed: () {},
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: RoundedBannerImage(
                         imageUrl: 'assets/img/banner/banner-2.jpg',
                         onPressed: () {},
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: RoundedBannerImage(
                         imageUrl: 'assets/img/banner/banner-3.jpg',
                         onPressed: () {},
@@ -506,7 +606,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                         productCategory: 'motor',
                         discount: '50',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/ban_michellin.png',
@@ -515,7 +615,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                         productCategory: 'motor',
                         discount: '20',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/ban_bridgestone.png',
@@ -524,7 +624,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                         productCategory: 'mobil',
                         discount: '35',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       ProductCard(
                         onTap: () {},
                         imageUrl: 'assets/img/product/aki_gs.png',
@@ -601,14 +701,14 @@ class _PelangganHomeState extends State<PelangganHomePage> {
                         garageTitle: 'Bengkel Ajwa',
                         garageDesc: 'Jl. Telekomunikasi No.203 Bojongsoang, Bandung',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       GarageCard(
                         onTap: () {},
                         imageUrl: 'assets/img/bengkel/bengkel-2.jpg',
                         garageTitle: 'Tambal ban sukapura',
                         garageDesc: 'Jl. Sukapura No.69 Dayeuhkolot, Bandung',
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       GarageCard(
                         onTap: () {},
                         imageUrl: 'assets/img/bengkel/bengkel-3.jpg',
@@ -627,7 +727,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
   }
 
   void navigateToLandingPage() {
-    PersistentNavBarNavigator.pushNewScreen(
+    pushScreen(
       context,
       screen: const LandingPage(),
       withNavBar: false, // OPTIONAL VALUE. True by default.
@@ -652,7 +752,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
           imgUrl1: 'assets/img/icon/icons8-garage.png',
           imgLabel1: 'Bengkel',
           onPressed1: () {
-            PersistentNavBarNavigator.pushNewScreen(
+            pushScreen(
               context,
               screen: ServiceGarage(),
               withNavBar: false, // OPTIONAL VALUE. True by default.

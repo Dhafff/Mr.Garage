@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../utils/global.colors.dart';
-import '../../pelanggan/navbar/pelanggan_navbar.dart';
+import '../../view/montir/navbar/montir_navbar.dart';
+import '../../utils/global.colors.dart';
 
 // register loading (ketika daftar sukses)
-class RegisterLoading extends StatelessWidget {
-  const RegisterLoading({super.key});
+class RegisterMontirLoading extends StatelessWidget {
+  const RegisterMontirLoading({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +40,8 @@ class RegisterLoading extends StatelessWidget {
 }
 
 // register success (ketika data udah masuk)
-class RegisterSuccess extends StatelessWidget {
-  const RegisterSuccess({super.key});
+class RegisterMontirSuccess extends StatelessWidget {
+  const RegisterMontirSuccess({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -74,29 +74,29 @@ class RegisterSuccess extends StatelessWidget {
   }
 }
 
-void navigateToRegisterLoading(BuildContext context) {
-  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RegisterLoading()));
+void navigateToRegisterMontirLoading(BuildContext context) {
+  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RegisterMontirLoading()));
 }
 
-void navigateToRegisterSuccess(BuildContext context) {
-  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterSuccess()));
+void navigateToRegisterMontirSuccess(BuildContext context) {
+  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RegisterMontirSuccess()));
 }
 
 void navigateToHome(BuildContext context) {
   Navigator.of(context).pushReplacement(
-    MaterialPageRoute(builder: (context) => const PelangganNavBar()),
+    MaterialPageRoute(builder: (context) => const MontirNavBar()),
   );
 }
 
-void handleRegistrationSubmit(BuildContext context) async {
+void handleRegistrationMontirSubmit(BuildContext context) async {
   // Tampilkan halaman loading
-  navigateToRegisterLoading(context);
+  navigateToRegisterMontirLoading(context);
 
   // Lakukan proses pendaftaran (misalnya pengiriman data ke server)
   await Future.delayed(const Duration(seconds: 6)); // Contoh penundaan simulasi
 
   // Setelah proses selesai, navigasi ke halaman berhasil
-  navigateToRegisterSuccess(context);
+  navigateToRegisterMontirSuccess(context);
 
   // Tunggu sebentar selama 3 detik
   await Future.delayed(const Duration(seconds: 3));

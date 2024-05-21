@@ -24,19 +24,23 @@ class GarageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: SizedBox(
         width: 145,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               height: 145,
-              padding: EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                // color: _generateRandomColor(),
+                image: DecorationImage(
+                  image: AssetImage(imageUrl),
+                  fit: fit,
+                ),
                 border: Border.all(width: 5, color: HexColor('f5f5f5')),
               ),
+              /*
               child: Stack(
                 children: [
                   // Thumbnail
@@ -51,6 +55,7 @@ class GarageCard extends StatelessWidget {
                   ),
                 ],
               ),
+              */
             ),
 
             // Details

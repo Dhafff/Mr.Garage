@@ -59,14 +59,14 @@ class _ProductCardState extends State<ProductCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap,
-      child: Container(
+      child: SizedBox(
         width: 145,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               height: 145,
-              padding: EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: _generateRandomColor(),
@@ -169,7 +169,7 @@ class _ProductCardState extends State<ProductCard> {
                   'Untuk ${widget.productCategory}',
                   style: GoogleFonts.openSans(
                     color: GlobalColors.secondColor,
-                    fontSize: 12,
+                    fontSize: 10,
                   ),
                 )
               ],
@@ -182,16 +182,16 @@ class _ProductCardState extends State<ProductCard> {
 
   Color _generateRandomColor() {
     final List<Color> colors = [
-      Color(0xFFD9D9D9),
-      Color(0xFFBBDEF9),
-      Color(0xFFEFD8BE),
-      Color(0xFFF9DD8F),
-      Color(0xFFFFE6E6),
-      Color(0xFFD1BB9E),
-      Color(0xFFF2C18D),
-      Color(0xFFB4B4B8),
-      Color(0xFFDC8686),
-      Color(0xFFC5EBAA),
+      const Color(0xFFD9D9D9),
+      const Color(0xFFBBDEF9),
+      const Color(0xFFEFD8BE),
+      const Color(0xFFF9DD8F),
+      const Color(0xFFFFE6E6),
+      const Color(0xFFD1BB9E),
+      const Color(0xFFF2C18D),
+      const Color(0xFFB4B4B8),
+      const Color(0xFFDC8686),
+      const Color(0xFFC5EBAA),
     ];
 
     final Random random = Random();

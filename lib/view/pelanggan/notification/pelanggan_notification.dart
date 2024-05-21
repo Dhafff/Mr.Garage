@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:mr_garage/common/widgets/notification/notification_card.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../../utils/global.colors.dart';
 import '../navbar/pelanggan_navbar.dart';
@@ -17,23 +17,23 @@ class PelangganNotification extends StatelessWidget {
       appBar: AppBar(
         surfaceTintColor: Colors.white,
         title: Container(
-          padding: EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Row(
             children: [
               GestureDetector(
                 onTap: () {
-                  PersistentNavBarNavigator.pushNewScreen(
+                  pushScreen(
                     context,
                     screen: const PelangganNavBar(),
                     withNavBar: false,
-                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                    pageTransitionAnimation: PageTransitionAnimation.slideRight,
                   );
                 },
-                child: Icon(FeatherIcons.arrowLeft),
+                child: const Icon(FeatherIcons.arrowLeft),
               ),
               const SizedBox(width: 20),
               Text(
-                'Belanja',
+                'Notifikasi',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -63,20 +63,23 @@ class PelangganNotification extends StatelessWidget {
             child: Column(
               children: [
                 NotificationCard(
-                    onTap: () {},
-                    icon: Icons.build_outlined,
-                    notificationTitle: 'Servis kendaraan',
-                    notificationDesc: 'Sedang di servis • 30 menit yang lalu'),
+                  onTap: () {},
+                  icon: Icons.build_outlined,
+                  notificationTitle: 'Servis kendaraan',
+                  notificationDesc: 'Sedang di servis • 30 menit yang lalu',
+                ),
                 NotificationCard(
-                    onTap: () {},
-                    icon: FeatherIcons.shoppingCart,
-                    notificationTitle: 'CVT X-ride 125',
-                    notificationDesc: 'Barang dikirim • 53 menit yang lalu'),
+                  onTap: () {},
+                  icon: FeatherIcons.shoppingCart,
+                  notificationTitle: 'CVT X-ride 125',
+                  notificationDesc: 'Barang dikirim • 53 menit yang lalu',
+                ),
                 NotificationCard(
-                    onTap: () {},
-                    icon: Symbols.auto_towing,
-                    notificationTitle: 'Derek kendaraan',
-                    notificationDesc: 'Selesai di derek • 1 hari yang lalu'),
+                  onTap: () {},
+                  icon: Symbols.auto_towing,
+                  notificationTitle: 'Derek kendaraan',
+                  notificationDesc: 'Selesai di derek • 1 hari yang lalu',
+                ),
               ],
             ),
           ),

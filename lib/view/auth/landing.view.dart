@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:mr_garage/features/service/auth_service.dart';
 import 'package:mr_garage/utils/global.colors.dart';
 import 'package:mr_garage/view/auth/forgot_password/forgot_password_page.dart';
 import 'package:mr_garage/view/pelanggan/navbar/pelanggan_navbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'register/register_montir.dart';
 import 'register/register_pelanggan.dart';
@@ -13,7 +16,7 @@ class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
 
   @override
-  _LandingPageState createState() => _LandingPageState();
+  State<LandingPage> createState() => _LandingPageState();
 }
 
 class _LandingPageState extends State<LandingPage> {
@@ -60,7 +63,7 @@ class _LandingPageState extends State<LandingPage> {
                                 child: Text(
                                   'Mr.Garage',
                                   style: GoogleFonts.openSans(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color: GlobalColors.textColor,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -132,7 +135,7 @@ class _LandingPageState extends State<LandingPage> {
                               ),
                             ),
                             builder: (BuildContext context) {
-                              return Container(
+                              return SizedBox(
                                 height: 300,
                                 child: Column(
                                   children: [
@@ -333,15 +336,127 @@ class _LandingPageState extends State<LandingPage> {
 
   void _showLoginModal(BuildContext context) {
     // controller
-    final GlobalKey<FormState> _formKey = GlobalKey();
-    final TextEditingController emailControllerA = TextEditingController();
+    final GlobalKey<FormState> formKey = GlobalKey();
+    final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
+
+    // login method
+    void loginUser() async {
+      // loading circle
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                LoadingAnimationWidget.staggeredDotsWave(color: GlobalColors.mainColor, size: 50),
+                const SizedBox(height: 15),
+                Text(
+                  'Tunggu sebentar...',
+                  style: GoogleFonts.openSans(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        );
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      } on FirebaseAuthException catch (e) {
+        Navigator.of(context).pop;
+        if (e.code == 'user-not-found') {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: Colors.white,
+                title: Text(
+                  'Pesan',
+                  style: GoogleFonts.openSans(
+                      fontSize: 15, fontWeight: FontWeight.w600, color: GlobalColors.textColor),
+                ),
+                content: Text(
+                  'Email salah',
+                  style: GoogleFonts.openSans(fontSize: 13, color: GlobalColors.thirdColor),
+                ),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: GlobalColors.mainColor,
+                      minimumSize: const Size(250, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: const Text(
+                      'Baik',
+                      style: TextStyle(fontSize: 15, color: Colors.white),
+                    ),
+                  )
+                ],
+              );
+            },
+          );
+          return;
+        } else if (e.code == 'wrong-password') {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  'Pesan',
+                  style: GoogleFonts.openSans(
+                      fontSize: 15, fontWeight: FontWeight.w600, color: GlobalColors.textColor),
+                ),
+                content: Text(
+                  'Kata sandi salah',
+                  style: GoogleFonts.openSans(fontSize: 13, color: GlobalColors.thirdColor),
+                ),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop;
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: GlobalColors.mainColor,
+                      minimumSize: const Size(250, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: const Text(
+                      'Baik',
+                      style: TextStyle(fontSize: 15, color: Colors.white),
+                    ),
+                  )
+                ],
+              );
+            },
+          );
+          return;
+        }
+      }
+    }
 
     bool? isChecked = true;
     bool isEmailFocusedA = false;
     bool isPasswordFocusedA = false;
     bool isEmailValidA = true;
-    bool _obscureText = false;
+    bool obscureText = true;
 
     showModalBottomSheet(
       context: context,
@@ -354,7 +469,7 @@ class _LandingPageState extends State<LandingPage> {
         ),
       ),
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height * 0.75,
           child: Column(
             children: [
@@ -370,7 +485,7 @@ class _LandingPageState extends State<LandingPage> {
               Padding(
                 padding: const EdgeInsets.all(30),
                 child: Form(
-                  key: _formKey,
+                  key: formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -401,7 +516,7 @@ class _LandingPageState extends State<LandingPage> {
                           )),
                       const SizedBox(height: 10),
                       TextFormField(
-                        controller: emailControllerA,
+                        controller: emailController,
                         keyboardType: TextInputType.emailAddress,
                         style: GoogleFonts.openSans(
                           fontSize: 12,
@@ -465,7 +580,7 @@ class _LandingPageState extends State<LandingPage> {
                       const SizedBox(height: 10),
                       TextFormField(
                         controller: passwordController,
-                        obscureText: _obscureText,
+                        obscureText: obscureText,
                         style: GoogleFonts.openSans(fontSize: 12),
                         onTap: () {
                           setState(() {
@@ -502,13 +617,13 @@ class _LandingPageState extends State<LandingPage> {
                           ),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscureText ? FeatherIcons.eye : FeatherIcons.eyeOff,
+                              obscureText ? FeatherIcons.eye : FeatherIcons.eyeOff,
                               size: 20,
                               color: GlobalColors.secondColor,
                             ),
                             onPressed: () {
                               setState(() {
-                                _obscureText = !_obscureText;
+                                obscureText = !obscureText;
                               });
                             },
                           ),
@@ -524,7 +639,7 @@ class _LandingPageState extends State<LandingPage> {
                                 value: isChecked,
                                 onChanged: (bool? value) {
                                   setState(() {
-                                    isChecked = value;
+                                    isChecked = value ?? false;
                                   });
                                 },
                               ),
@@ -558,82 +673,82 @@ class _LandingPageState extends State<LandingPage> {
                       const SizedBox(height: 35),
                       ElevatedButton(
                         onPressed: () {
-                          if (emailControllerA.text.isEmpty || !isEmailValidA) {
+                          if (emailController.text.isEmpty || !isEmailValidA) {
                             showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                      'Pesan',
-                                      style: GoogleFonts.openSans(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          color: GlobalColors.textColor),
-                                    ),
-                                    content: Text(
-                                      'Email belum diisi atau tidak valid',
-                                      style:
-                                          GoogleFonts.openSans(fontSize: 13, color: GlobalColors.thirdColor),
-                                    ),
-                                    actions: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: GlobalColors.mainColor,
-                                          minimumSize: const Size(250, 50),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(15),
-                                          ),
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    'Pesan',
+                                    style: GoogleFonts.openSans(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        color: GlobalColors.textColor),
+                                  ),
+                                  content: Text(
+                                    'Email belum diisi atau tidak valid',
+                                    style: GoogleFonts.openSans(fontSize: 13, color: GlobalColors.thirdColor),
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: GlobalColors.mainColor,
+                                        minimumSize: const Size(250, 50),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15),
                                         ),
-                                        child: const Text(
-                                          'Baik',
-                                          style: TextStyle(fontSize: 15, color: Colors.white),
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                });
+                                      ),
+                                      child: const Text(
+                                        'Baik',
+                                        style: TextStyle(fontSize: 15, color: Colors.white),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
+                            );
                           } else if (passwordController.text.isEmpty) {
                             showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                      'Pesan',
-                                      style: GoogleFonts.openSans(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          color: GlobalColors.textColor),
-                                    ),
-                                    content: Text(
-                                      'Password belum diisi atau tidak valid',
-                                      style:
-                                          GoogleFonts.openSans(fontSize: 13, color: GlobalColors.thirdColor),
-                                    ),
-                                    actions: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: GlobalColors.mainColor,
-                                          minimumSize: const Size(250, 50),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(15),
-                                          ),
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    'Pesan',
+                                    style: GoogleFonts.openSans(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        color: GlobalColors.textColor),
+                                  ),
+                                  content: Text(
+                                    'Password belum diisi',
+                                    style: GoogleFonts.openSans(fontSize: 13, color: GlobalColors.thirdColor),
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: GlobalColors.mainColor,
+                                        minimumSize: const Size(250, 50),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15),
                                         ),
-                                        child: const Text(
-                                          'Baik',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                });
+                                      ),
+                                      child: const Text(
+                                        'Baik',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
+                            );
                           } else {
-                            navigateToHome(context);
+                            loginUser();
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -682,7 +797,9 @@ class _LandingPageState extends State<LandingPage> {
                       ),
                       const SizedBox(height: 15),
                       OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          AuthService().signInWithGoogle();
+                        },
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(
                             color: GlobalColors.mainColor,
@@ -699,9 +816,9 @@ class _LandingPageState extends State<LandingPage> {
                               'assets/img/logo/google_icon.png',
                               width: 30,
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 5),
                             Text(
-                              'Sign in with Google',
+                              'Masuk dengan Google',
                               style: TextStyle(
                                 fontSize: 15,
                                 color: GlobalColors.textColor,

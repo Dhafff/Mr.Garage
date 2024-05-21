@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 class CustomSnackBarContent extends StatelessWidget {
   const CustomSnackBarContent({
     super.key,
-    required this.warningText,
+    required this.titleMessage,
+    required this.textMessage,
+    required this.backgroundColor,
+    required this.icon,
   });
 
-  final String warningText;
+  final String titleMessage;
+  final String textMessage;
+  final Color backgroundColor;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,10 @@ class CustomSnackBarContent extends StatelessWidget {
       children: [
         Container(
           height: 90,
-          decoration: BoxDecoration(color: HexColor('FAA300'), borderRadius: BorderRadius.circular(15)),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(15),
+          ),
           child: Row(
             children: [
               const SizedBox(width: 60),
@@ -28,13 +36,13 @@ class CustomSnackBarContent extends StatelessWidget {
                   children: [
                     const SizedBox(height: 8),
                     Text(
-                      'Peringatan!',
+                      titleMessage,
                       style: GoogleFonts.openSans(
                           fontSize: 15, color: Colors.white, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      warningText,
+                      textMessage,
                       style: GoogleFonts.openSans(fontSize: 12, color: Colors.white),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -68,13 +76,9 @@ class CustomSnackBarContent extends StatelessWidget {
               ),
               Positioned(
                 top: 3,
-                child: Text(
-                  '!',
-                  style: GoogleFonts.openSans(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                child: Icon(
+                  icon,
+                  size: 15,
                 ),
               )
             ],

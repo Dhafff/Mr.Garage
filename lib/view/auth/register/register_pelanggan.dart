@@ -4,20 +4,27 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+// import 'package:mr_garage/common/widgets/modal/modal_email.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:email_validator/email_validator.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 import '../../../common/widgets/snackbar/custom_snackbar.dart';
 import '../../../utils/global.colors.dart';
 import '../../../utils/notification.controller.dart';
 import '../landing.view.dart';
-import 'handle_registration.dart' as handler;
+import '../../../features/service/handle_registration_pelanggan.dart' as handler;
 
 class RegisterPelangganPage extends StatefulWidget {
   const RegisterPelangganPage({super.key});
@@ -65,6 +72,12 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
     super.dispose();
   }
 
+  String generateVerificationCode() {
+    Random random = Random();
+    int fourDigits = random.nextInt(9999);
+    return fourDigits.toString().padLeft(4, '0');
+  }
+
   // list judul
   int _pageIndex = 0;
   final List<Map<String, dynamic>> _step = [
@@ -74,9 +87,9 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
       'tombol': 'Selanjutnya',
     },
     {
-      'judul': 'Verifikasi email',
-      'deskripsi': 'Kami akan mengirimkan kode verifikasi\nkepada anda',
-      'tombol': 'Verifikasi',
+      'judul': 'Verifikasi akun',
+      'deskripsi': 'Kami udah ngirimin kamu kode verifikasi\nke perangkat kamu',
+      'tombol': 'Selanjutnya',
     },
     {
       'judul': 'Pilih foto',
@@ -98,19 +111,13 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
   String? pin1, pin2, pin3, pin4;
 
   bool? isUsernameValid = true;
-  bool? isEmailValid = true;
   bool isUsernameFocused = false;
   bool isEmailFocused = false;
   bool isPasswordFocused = false;
   bool _obscureText = true;
 
-  String generateVerificationCode() {
-    Random random = Random();
-    int fourDigits = random.nextInt(9999);
-    return fourDigits.toString().padLeft(4, '0');
-  }
-
   void nextStep() async {
+    final bool isValid = EmailValidator.validate(emailController.text.trim());
     if (_pageIndex == 0) {
       if (!_step1FormKey.currentState!.validate()) {
         return;
@@ -120,9 +127,13 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
           emailController.text.isEmpty ||
           passwordController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content:
-                CustomSnackBarContent(warningText: 'Nama pengguna atau email atau kata sandi belum diisi'),
+          SnackBar(
+            content: CustomSnackBarContent(
+              backgroundColor: HexColor('FAA300'),
+              titleMessage: 'Peringatan',
+              textMessage: 'Nama pengguna atau email atau kata sandi belum diisi',
+              icon: Icons.warning_outlined,
+            ),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -134,8 +145,13 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
       // validasi nama pengguna
       if (usernameController.text.length < 6) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: CustomSnackBarContent(warningText: 'Nama pengguna harus memiliki 6 karakter atau lebih'),
+          SnackBar(
+            content: CustomSnackBarContent(
+              backgroundColor: HexColor('FAA300'),
+              titleMessage: 'Peringatan',
+              textMessage: 'Nama pengguna harus 6 karakter atau lebih',
+              icon: Icons.warning_outlined,
+            ),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -144,8 +160,13 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
         return;
       } else if (usernameController.text.length > 15) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: CustomSnackBarContent(warningText: 'Nama pengguna melebihi batas yaitu 15 karakter'),
+          SnackBar(
+            content: CustomSnackBarContent(
+              backgroundColor: HexColor('FAA300'),
+              titleMessage: 'Peringatan',
+              textMessage: 'Nama pengguna tidak boleh lebih dari 15 karakter',
+              icon: Icons.warning_outlined,
+            ),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -154,11 +175,15 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
         return;
       } else if (usernameController.text.contains('#') ||
           usernameController.text.contains('@') ||
-          usernameController.text.contains('!') ||
-          usernameController.text.contains(' ')) {
+          usernameController.text.contains('!')) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: CustomSnackBarContent(warningText: 'Nama pengguna tidak boleh ada !, @, #, dan spasi'),
+          SnackBar(
+            content: CustomSnackBarContent(
+              backgroundColor: HexColor('FAA300'),
+              titleMessage: 'Peringatan',
+              textMessage: 'Nama pengguna mengandung !, @, dan #',
+              icon: Icons.warning_outlined,
+            ),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -168,10 +193,15 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
       }
 
       // validasi email
-      if (!validateEmail(emailController.text)) {
+      if (!isValid) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: CustomSnackBarContent(warningText: 'Email tidak valid'),
+          SnackBar(
+            content: CustomSnackBarContent(
+              backgroundColor: HexColor('FAA300'),
+              titleMessage: 'Peringatan',
+              textMessage: 'Email tidak valid',
+              icon: Icons.warning_outlined,
+            ),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -181,11 +211,15 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
       }
 
       // validasi kata sandi
-      if (passwordController.text.length < 8 || !passwordController.text.contains(new RegExp(r'[0-9]'))) {
+      if (passwordController.text.length < 8 || !passwordController.text.contains(RegExp(r'[0-9]'))) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: CustomSnackBarContent(
-                warningText: 'Kata sandi harus memiliki 8 karakter atau lebih dan minimal 1 angka'),
+              backgroundColor: HexColor('FAA300'),
+              titleMessage: 'Peringatan',
+              textMessage: 'Kata sandi harus 8 karakter atau lebih dan minimal ada 1 angka',
+              icon: Icons.warning_outlined,
+            ),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -194,8 +228,52 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
         return;
       }
 
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: CustomSnackBarContent(
+              backgroundColor: HexColor('FAA300'),
+              titleMessage: 'Peringatan',
+              textMessage: "$e",
+              icon: Icons.warning_outlined,
+            ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+        );
+      }
+
       setState(() {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  LoadingAnimationWidget.staggeredDotsWave(color: GlobalColors.mainColor, size: 150),
+                  const SizedBox(height: 15),
+                  Text(
+                    'Tunggu sebentar...',
+                    style: GoogleFonts.openSans(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
         _pageIndex = 1;
+        Navigator.of(context).pop();
       });
 
       try {
@@ -222,35 +300,82 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
           String enteredVerificationCode = '$pin1$pin2$pin3$pin4';
           if (enteredVerificationCode.isEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: CustomSnackBarContent(warningText: 'Kode verifikasi belum diisi'),
+              SnackBar(
+                content: CustomSnackBarContent(
+                  backgroundColor: HexColor('FAA300'),
+                  titleMessage: 'Peringatan',
+                  textMessage: 'Kode verifikasi belum diisi.',
+                  icon: Icons.warning_outlined,
+                ),
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.transparent,
                 elevation: 0,
               ),
             );
-            return setState(() {});
+            return setState(() {
+              pin1 = null;
+              pin2 = null;
+              pin3 = null;
+              pin4 = null;
+            });
           }
           if (enteredVerificationCode != generatedVerificationCode) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: CustomSnackBarContent(warningText: 'Kode verifikasi salah'),
+              SnackBar(
+                content: CustomSnackBarContent(
+                  backgroundColor: HexColor('FAA300'),
+                  titleMessage: 'Peringatan',
+                  textMessage: 'Kode verifikasi salah.',
+                  icon: Icons.warning_outlined,
+                ),
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.transparent,
                 elevation: 0,
               ),
             );
-            return setState(() {});
+            return setState(() {
+              pin1 = null;
+              pin2 = null;
+              pin3 = null;
+              pin4 = null;
+            });
           }
         }
       }
 
       setState(() {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  LoadingAnimationWidget.staggeredDotsWave(color: GlobalColors.mainColor, size: 150),
+                  const SizedBox(height: 15),
+                  Text(
+                    'Tunggu sebentar...',
+                    style: GoogleFonts.openSans(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
         _pageIndex = 2;
+        Navigator.of(context).pop();
       });
 
       // validasi foto profil
     } else if (_pageIndex == 2) {
+      // simpan ke variabel
+      String username = usernameController.text;
+      String email = emailController.text.trim();
+      String password = passwordController.text.trim();
       if (_image == null) {
         showModalBottomSheet(
           context: context,
@@ -292,84 +417,41 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Kamu masih bisa atur profil kamu di halaman edit profil',
+                    'Kamu harus atur foto profil terlebih dahulu.',
                     style: TextStyle(
                       fontSize: 13,
                       color: GlobalColors.thirdColor,
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: GlobalColors.mainColor,
-                            minimumSize: const Size(170, 40),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            )),
-                        child: Text(
-                          'Tidak',
-                          style: GoogleFonts.openSans(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: GlobalColors.mainColor,
+                        minimumSize: const Size(double.infinity, 40),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        )),
+                    child: Text(
+                      'Baik',
+                      style: GoogleFonts.openSans(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
-                      OutlinedButton(
-                        onPressed: () {
-                          handler.handleRegistrationSubmit(context);
-                        },
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: GlobalColors.mainColor,
-                          ),
-                          minimumSize: const Size(170, 40),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Text(
-                          'Yakin',
-                          style: GoogleFonts.openSans(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: GlobalColors.mainColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                    ),
+                  ),
                 ],
               ),
             );
           },
         );
       } else {
-        handler.handleRegistrationSubmit(context);
+        handler.handleRegistrationPelangganSubmit(context, username, email, password, selectedImage!);
       }
     }
-  }
-
-  bool validateEmail(String email) {
-    final RegExp regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    final RegExp domainRegex = RegExp(r'\.([a-zA-Z]{2,}|[a-zA-Z]{2}\.[a-zA-Z]{2})$');
-
-    if (!regex.hasMatch(email)) {
-      return false;
-    }
-
-    String domain = email.split('@')[1];
-    if (!domainRegex.hasMatch(domain)) {
-      return false;
-    }
-
-    return true;
   }
 
   Widget buildStep1Form() {
@@ -454,11 +536,6 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
             style: GoogleFonts.openSans(
               fontSize: 12,
             ),
-            onChanged: (value) {
-              setState(() {
-                isEmailValid = validateEmail(value);
-              });
-            },
             onTap: () {
               setState(() {
                 isEmailFocused = true;
@@ -601,9 +678,8 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
                       pin2 = value;
                     } else if (pin3 == null) {
                       pin3 = value;
-                    } else if (pin4 == null) {
-                      pin4 = value;
-                    }
+                    } else
+                      pin4 ??= value;
                   },
                   onChanged: (value) {
                     if (value.length == 1) {
@@ -645,9 +721,8 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
                       pin2 = value;
                     } else if (pin3 == null) {
                       pin3 = value;
-                    } else if (pin4 == null) {
-                      pin4 = value;
-                    }
+                    } else
+                      pin4 ??= value;
                   },
                   onChanged: (value) {
                     if (value.length == 1) {
@@ -689,9 +764,8 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
                       pin2 = value;
                     } else if (pin3 == null) {
                       pin3 = value;
-                    } else if (pin4 == null) {
-                      pin4 = value;
-                    }
+                    } else
+                      pin4 ??= value;
                   },
                   onChanged: (value) {
                     if (value.length == 1) {
@@ -733,9 +807,8 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
                       pin2 = value;
                     } else if (pin3 == null) {
                       pin3 = value;
-                    } else if (pin4 == null) {
-                      pin4 = value;
-                    }
+                    } else
+                      pin4 ??= value;
                   },
                   onChanged: (value) {
                     if (value.length == 1) {
@@ -850,7 +923,7 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
                   bottom: 0,
                   left: 135,
                   child: GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       showImagePickerOption(context);
                     },
                     child: Container(
@@ -893,77 +966,77 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Container(
-                            padding: const EdgeInsets.all(30),
-                            height: 270,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15),
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Container(
+                              padding: const EdgeInsets.all(30),
+                              height: 270,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
                               ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 35,
-                                  height: 35,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: HexColor('E82327'),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 35,
+                                    height: 35,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: HexColor('E82327'),
+                                    ),
+                                    child: const Icon(
+                                      FeatherIcons.arrowLeft,
+                                      size: 15,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                  child: const Icon(
-                                    FeatherIcons.arrowLeft,
-                                    size: 15,
-                                    color: Colors.white,
+                                  const SizedBox(height: 20),
+                                  Text(
+                                    'Kembali ke halaman awal?',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: GlobalColors.textColor,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 20),
-                                Text(
-                                  'Kembali ke halaman awal?',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: GlobalColors.textColor,
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'Semua upaya yang sudah kamu lakuin bakal ke reset',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: GlobalColors.thirdColor,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  'Semua upaya yang sudah kamu lakuin bakal ke reset',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: GlobalColors.thirdColor,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: GlobalColors.mainColor,
-                                          minimumSize: const Size(170, 40),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                          )),
-                                      child: Text(
-                                        'Tidak',
-                                        style: GoogleFonts.openSans(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: GlobalColors.mainColor,
+                                            minimumSize: const Size(170, 40),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                            )),
+                                        child: Text(
+                                          'Tidak',
+                                          style: GoogleFonts.openSans(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    OutlinedButton(
+                                      OutlinedButton(
                                         onPressed: () {
                                           Navigator.pushReplacement(
                                             context,
@@ -988,16 +1061,20 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
                                             fontWeight: FontWeight.w600,
                                             color: GlobalColors.mainColor,
                                           ),
-                                        ))
-                                  ],
-                                )
-                              ],
-                            ),
-                          );
-                        });
-                  },
-                  child: const Icon(FeatherIcons.arrowLeft),
-                ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            );
+                          });
+                    },
+                    child: const SizedBox(
+                      width: 25,
+                      height: 25,
+                      child: Icon(FeatherIcons.arrowLeft),
+                    )),
                 const SizedBox(height: 50),
                 GestureDetector(
                   onTap: () {
@@ -1041,9 +1118,7 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
                 ),
                 forms[_pageIndex],
                 ElevatedButton(
-                  onPressed: () {
-                    nextStep();
-                  },
+                  onPressed: () => nextStep(),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: GlobalColors.mainColor,
                       minimumSize: const Size(355, 55),
@@ -1078,7 +1153,7 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
         ),
       ),
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: 300,
           child: Column(
             children: [
@@ -1146,8 +1221,27 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
                         ),
                         const SizedBox(width: 20),
                         ElevatedButton(
-                          onPressed: () {
-                            _pickImageFromCamera();
+                          onPressed: () async {
+                            Map<Permission, PermissionStatus> statuss = await [
+                              Permission.camera,
+                            ].request();
+                            if (statuss[Permission.camera]!.isGranted) {
+                              _pickImageFromCamera();
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: CustomSnackBarContent(
+                                    titleMessage: 'Peringatan',
+                                    textMessage: 'Akses ditolak',
+                                    backgroundColor: HexColor('FAA300'),
+                                    icon: Icons.warning_outlined,
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.transparent,
+                                  elevation: 0,
+                                ),
+                              );
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(165, 135),
@@ -1189,38 +1283,61 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
   }
 
   Future _pickImageFromGallery() async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
-      status = await Permission.storage.status;
-    }
-
-    if (status.isGranted) {
-      final returnImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (returnImage == null) return;
-      setState(() {
-        selectedImage = File(returnImage.path);
-        _image = File(returnImage.path).readAsBytesSync();
-      });
-      Navigator.of(context).pop();
-    }
+    await ImagePicker().pickImage(source: ImageSource.gallery).then((value) {
+      if (value != null) {
+        _cropImage(File(value.path));
+      }
+    });
+    Navigator.of(context).pop();
   }
 
   Future _pickImageFromCamera() async {
-    var status = await Permission.camera.status;
-    if (!status.isGranted) {
-      await Permission.camera.request();
-      status = await Permission.camera.status;
-    }
+    await ImagePicker().pickImage(source: ImageSource.camera).then((value) {
+      if (value != null) {
+        _cropImage(File(value.path));
+      }
+    });
+    Navigator.of(context).pop();
+  }
 
-    if (status.isGranted) {
-      final returnImage = await ImagePicker().pickImage(source: ImageSource.camera);
-      if (returnImage == null) return;
+  _cropImage(File imgFile) async {
+    final croppedFile = await ImageCropper().cropImage(
+      sourcePath: imgFile.path,
+      aspectRatioPresets: Platform.isAndroid
+          ? [
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio16x9
+            ]
+          : [
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio5x3,
+              CropAspectRatioPreset.ratio5x4,
+              CropAspectRatioPreset.ratio7x5,
+              CropAspectRatioPreset.ratio16x9,
+            ],
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Pangkas gambar',
+          toolbarColor: GlobalColors.mainColor,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        IOSUiSettings(title: 'Pangkas gambar'),
+      ],
+    );
+    if (croppedFile != null) {
+      imageCache.clear();
       setState(() {
-        selectedImage = File(returnImage.path);
-        _image = File(returnImage.path).readAsBytesSync();
+        selectedImage = File(croppedFile.path);
+        _image = File(croppedFile.path).readAsBytesSync();
       });
-      Navigator.of(context).pop();
     }
   }
 }

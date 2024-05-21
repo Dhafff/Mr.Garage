@@ -5,12 +5,14 @@ import 'dart:typed_data';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -18,7 +20,7 @@ import '../../../common/widgets/snackbar/custom_snackbar.dart';
 import '../../../utils/global.colors.dart';
 import '../../../utils/notification.controller.dart';
 import '../landing.view.dart';
-import 'handle_registration.dart' as handler;
+import '../../../features/service/handle_registration_montir.dart' as handler;
 
 class RegisterMontirPage extends StatefulWidget {
   const RegisterMontirPage({super.key});
@@ -131,6 +133,7 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
   }
 
   void nextStep() async {
+    final bool isValid = EmailValidator.validate(emailController.text.trim());
     if (_pageIndex == 0) {
       if (!_step1FormKey.currentState!.validate()) {
         return;
@@ -140,9 +143,13 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
           emailController.text.isEmpty ||
           passwordController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content:
-                CustomSnackBarContent(warningText: 'Nama pengguna atau email\natau kata sandi belum diisi'),
+          SnackBar(
+            content: CustomSnackBarContent(
+              backgroundColor: HexColor('FAA300'),
+              titleMessage: 'Peringatan',
+              textMessage: 'Nama pengguna atau email atau kata sandi belum diisi',
+              icon: Icons.warning_outlined,
+            ),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -154,9 +161,13 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
       // validasi nama pengguna
       if (usernameController.text.length < 6) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content:
-                CustomSnackBarContent(warningText: 'Nama pengguna harus memiliki\n6 karakter atau lebih'),
+          SnackBar(
+            content: CustomSnackBarContent(
+              backgroundColor: HexColor('FAA300'),
+              titleMessage: 'Peringatan',
+              textMessage: 'Nama pengguna harus 6 karakter atau lebih',
+              icon: Icons.warning_outlined,
+            ),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -165,8 +176,13 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
         return;
       } else if (usernameController.text.length > 15) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: CustomSnackBarContent(warningText: 'Nama pengguna melebihi batas\nyaitu 15 karakter'),
+          SnackBar(
+            content: CustomSnackBarContent(
+              backgroundColor: HexColor('FAA300'),
+              titleMessage: 'Peringatan',
+              textMessage: 'Nama pengguna tidak boleh lebih dari 15 karakter',
+              icon: Icons.warning_outlined,
+            ),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -175,11 +191,15 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
         return;
       } else if (usernameController.text.contains('#') ||
           usernameController.text.contains('@') ||
-          usernameController.text.contains('!') ||
-          usernameController.text.contains(' ')) {
+          usernameController.text.contains('!')) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: CustomSnackBarContent(warningText: 'Nama pengguna tidak boleh ada\n!, @, #, dan spasi'),
+          SnackBar(
+            content: CustomSnackBarContent(
+              backgroundColor: HexColor('FAA300'),
+              titleMessage: 'Peringatan',
+              textMessage: 'Nama pengguna mengandung !, @, dan #',
+              icon: Icons.warning_outlined,
+            ),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -189,13 +209,15 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
       }
 
       // validasi email
-      if (!validateEmail(emailController.text)) {
+      if (!isValid) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: CustomSnackBarContent(warningText: 'Email tidak valid'),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
+          SnackBar(
+            content: CustomSnackBarContent(
+              backgroundColor: HexColor('FAA300'),
+              titleMessage: 'Peringatan',
+              textMessage: 'Email tidak valid',
+              icon: Icons.warning_outlined,
+            ),
           ),
         );
         return;
@@ -204,10 +226,13 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
       // validasi kata sandi
       if (passwordController.text.length < 8 || !passwordController.text.contains(RegExp(r'[0-9]'))) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: CustomSnackBarContent(
-                warningText:
-                    'Kata sandi harus memiliki 8 karakter\natau lebih dan minimal mengandung 1 angka'),
+              backgroundColor: HexColor('FAA300'),
+              titleMessage: 'Peringatan',
+              textMessage: 'Kata sandi harus 8 karakter atau lebih dan minimal ada 1 angka',
+              icon: Icons.warning_outlined,
+            ),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -227,8 +252,13 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
 
         if (workshopNameController.text.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: CustomSnackBarContent(warningText: 'Nama bengkel belum diisi'),
+            SnackBar(
+              content: CustomSnackBarContent(
+                backgroundColor: HexColor('FAA300'),
+                titleMessage: 'Peringatan',
+                textMessage: 'Nama bengkel belum diisi',
+                icon: Icons.warning_outlined,
+              ),
               behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -237,8 +267,13 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
           return;
         } else if (workshopLocationController.text.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: CustomSnackBarContent(warningText: 'Lokasi bengkel belum diisi'),
+            SnackBar(
+              content: CustomSnackBarContent(
+                backgroundColor: HexColor('FAA300'),
+                titleMessage: 'Peringatan',
+                textMessage: 'Lokasi bengkel belum diisi',
+                icon: Icons.warning_outlined,
+              ),
               behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -247,8 +282,13 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
           return;
         } else if (dropdownValue == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: CustomSnackBarContent(warningText: 'Silahkan pilih kategori bengkel kamu'),
+            SnackBar(
+              content: CustomSnackBarContent(
+                backgroundColor: HexColor('FAA300'),
+                titleMessage: 'Peringatan',
+                textMessage: 'Silahkan pilih kategori bengkel kamu',
+                icon: Icons.warning_outlined,
+              ),
               behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -261,8 +301,13 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
             workshopNameController.text.contains('@') ||
             workshopNameController.text.contains('#')) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: CustomSnackBarContent(warningText: 'Nama bengkel tidak boleh ada !, @, dan #'),
+            SnackBar(
+              content: CustomSnackBarContent(
+                backgroundColor: HexColor('FAA300'),
+                titleMessage: 'Peringatan',
+                textMessage: 'Nama bengkel tidak boleh ada !, @, dan #',
+                icon: Icons.warning_outlined,
+              ),
               behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -289,6 +334,7 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
 
       // validasi verifikasi email
     } else if (_pageIndex == 2) {
+      /*
       if (_step3FormKey.currentState!.validate()) {
         _step3FormKey.currentState!.save();
 
@@ -318,6 +364,7 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
           }
         }
       }
+      */
 
       setState(() {
         _pageIndex = 3;
@@ -399,7 +446,7 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
                         ),
                         OutlinedButton(
                           onPressed: () {
-                            handler.handleRegistrationSubmit(context);
+                            handler.handleRegistrationMontirSubmit(context);
                           },
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(
@@ -427,7 +474,7 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
             },
           );
         } else {
-          handler.handleRegistrationSubmit(context);
+          handler.handleRegistrationMontirSubmit(context);
         }
       }
     }
@@ -883,9 +930,8 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
                       pin2 = value;
                     } else if (pin3 == null) {
                       pin3 = value;
-                    } else if (pin4 == null) {
-                      pin4 = value;
-                    }
+                    } else
+                      pin4 ??= value;
                   },
                   onChanged: (value) {
                     if (value.length == 1) {
@@ -927,9 +973,8 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
                       pin2 = value;
                     } else if (pin3 == null) {
                       pin3 = value;
-                    } else if (pin4 == null) {
-                      pin4 = value;
-                    }
+                    } else
+                      pin4 ??= value;
                   },
                   onChanged: (value) {
                     if (value.length == 1) {
@@ -971,9 +1016,8 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
                       pin2 = value;
                     } else if (pin3 == null) {
                       pin3 = value;
-                    } else if (pin4 == null) {
-                      pin4 = value;
-                    }
+                    } else
+                      pin4 ??= value;
                   },
                   onChanged: (value) {
                     if (value.length == 1) {
@@ -1015,9 +1059,8 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
                       pin2 = value;
                     } else if (pin3 == null) {
                       pin3 = value;
-                    } else if (pin4 == null) {
-                      pin4 = value;
-                    }
+                    } else
+                      pin4 ??= value;
                   },
                   onChanged: (value) {
                     if (value.length == 1) {
@@ -1361,7 +1404,7 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
         ),
       ),
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: 300,
           child: Column(
             children: [
@@ -1397,8 +1440,27 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ElevatedButton(
-                          onPressed: () {
-                            _pickImageFromGallery();
+                          onPressed: () async {
+                            Map<Permission, PermissionStatus> statuss = await [
+                              Permission.photos,
+                            ].request();
+                            if (statuss[Permission.photos]!.isGranted) {
+                              _pickImageFromGallery();
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: CustomSnackBarContent(
+                                    backgroundColor: HexColor('FAA300'),
+                                    titleMessage: 'Peringatan',
+                                    textMessage: 'Akses ditolak',
+                                    icon: Icons.warning_outlined,
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.transparent,
+                                  elevation: 0,
+                                ),
+                              );
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(165, 135),
@@ -1429,8 +1491,27 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
                         ),
                         const SizedBox(width: 20),
                         ElevatedButton(
-                          onPressed: () {
-                            _pickImageFromCamera();
+                          onPressed: () async {
+                            Map<Permission, PermissionStatus> statuss = await [
+                              Permission.camera,
+                            ].request();
+                            if (statuss[Permission.camera]!.isGranted) {
+                              _pickImageFromCamera();
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: CustomSnackBarContent(
+                                    backgroundColor: HexColor('FAA300'),
+                                    titleMessage: 'Peringatan',
+                                    textMessage: 'Akses ditolak',
+                                    icon: Icons.warning_outlined,
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.transparent,
+                                  elevation: 0,
+                                ),
+                              );
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(165, 135),
@@ -1472,38 +1553,70 @@ class _RegisterMontirPageState extends State<RegisterMontirPage> {
   }
 
   Future _pickImageFromGallery() async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
-      status = await Permission.storage.status;
-    }
-
-    if (status.isGranted) {
-      final returnImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (returnImage == null) return;
-      setState(() {
-        selectedImage = File(returnImage.path);
-        _image = File(returnImage.path).readAsBytesSync();
-      });
-      Navigator.of(context).pop();
-    }
+    final returnImage = await ImagePicker().pickImage(source: ImageSource.gallery).then((value) {
+      if (value != null) {
+        _cropImage(File(value.path));
+      }
+    });
+    if (returnImage == null) return;
+    setState(() {
+      selectedImage = File(returnImage.path);
+      _image = File(returnImage.path).readAsBytesSync();
+    });
+    Navigator.of(context).pop();
   }
 
   Future _pickImageFromCamera() async {
-    var status = await Permission.camera.status;
-    if (!status.isGranted) {
-      await Permission.camera.request();
-      status = await Permission.camera.status;
-    }
+    final returnImage = await ImagePicker().pickImage(source: ImageSource.camera).then((value) {
+      if (value != null) {
+        _cropImage(File(value.path));
+      }
+    });
+    if (returnImage == null) return;
+    setState(() {
+      selectedImage = File(returnImage.path);
+      _image = File(returnImage.path).readAsBytesSync();
+    });
+    Navigator.of(context).pop();
+  }
 
-    if (status.isGranted) {
-      final returnImage = await ImagePicker().pickImage(source: ImageSource.camera);
-      if (returnImage == null) return;
+  _cropImage(File imgFile) async {
+    final croppedFile = await ImageCropper().cropImage(
+      sourcePath: imgFile.path,
+      aspectRatioPresets: Platform.isAndroid
+          ? [
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio16x9
+            ]
+          : [
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio5x3,
+              CropAspectRatioPreset.ratio5x4,
+              CropAspectRatioPreset.ratio7x5,
+              CropAspectRatioPreset.ratio16x9,
+            ],
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Pangkas gambar',
+          toolbarColor: GlobalColors.mainColor,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        IOSUiSettings(title: 'Pangkas gambar'),
+      ],
+    );
+    if (croppedFile != null) {
+      imageCache.clear();
       setState(() {
-        selectedImage = File(returnImage.path);
-        _image = File(returnImage.path).readAsBytesSync();
+        selectedImage = File(croppedFile.path);
       });
-      Navigator.of(context).pop();
     }
   }
 }
