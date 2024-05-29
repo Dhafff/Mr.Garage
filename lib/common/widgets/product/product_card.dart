@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,7 +11,7 @@ class ProductCard extends StatefulWidget {
     super.key,
     required this.onTap,
     required this.imageUrl,
-    this.fit = BoxFit.contain,
+    this.fit = BoxFit.cover,
     required this.productTitle,
     this.currencySign = 'Rp',
     required this.productPrice,
@@ -69,22 +68,14 @@ class _ProductCardState extends State<ProductCard> {
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: _generateRandomColor(),
+                image: DecorationImage(
+                  image: AssetImage(widget.imageUrl),
+                  fit: widget.fit,
+                ),
                 border: Border.all(width: 5, color: HexColor('f5f5f5')),
               ),
               child: Stack(
                 children: [
-                  // Thumbnail
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Center(
-                      child: Image.asset(
-                        widget.imageUrl,
-                        fit: widget.fit,
-                      ),
-                    ),
-                  ),
-
                   // Fav icon
                   Positioned(
                     right: 0,
@@ -178,23 +169,5 @@ class _ProductCardState extends State<ProductCard> {
         ),
       ),
     );
-  }
-
-  Color _generateRandomColor() {
-    final List<Color> colors = [
-      const Color(0xFFD9D9D9),
-      const Color(0xFFBBDEF9),
-      const Color(0xFFEFD8BE),
-      const Color(0xFFF9DD8F),
-      const Color(0xFFFFE6E6),
-      const Color(0xFFD1BB9E),
-      const Color(0xFFF2C18D),
-      const Color(0xFFB4B4B8),
-      const Color(0xFFDC8686),
-      const Color(0xFFC5EBAA),
-    ];
-
-    final Random random = Random();
-    return colors[random.nextInt(colors.length)];
   }
 }

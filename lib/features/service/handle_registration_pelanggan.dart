@@ -81,7 +81,12 @@ class RegisterPelangganSuccess extends StatelessWidget {
 
 // register tidak berhasil
 class RegisterPelangganUnsuccess extends StatelessWidget {
-  const RegisterPelangganUnsuccess({super.key});
+  const RegisterPelangganUnsuccess({
+    super.key,
+    required this.errorMessage,
+  });
+
+  final String errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +112,16 @@ class RegisterPelangganUnsuccess extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
+            const SizedBox(height: 15),
+            Text(
+              errorMessage,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.openSans(
+                fontSize: 13,
+                fontWeight: FontWeight.normal,
+                color: Colors.white,
+              ),
+            ),
           ],
         ),
       ),
@@ -122,8 +137,9 @@ void navigateToRegisterPelangganSuccess(BuildContext context) {
   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RegisterPelangganSuccess()));
 }
 
-void navigateToRegisterPelangganUnsuccess(BuildContext context) {
-  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RegisterPelangganUnsuccess()));
+void navigateToRegisterPelangganUnsuccess(BuildContext context, String message) {
+  Navigator.of(context)
+      .push(MaterialPageRoute(builder: (context) => RegisterPelangganUnsuccess(errorMessage: message)));
 }
 
 void navigateToLanding(BuildContext context) {
@@ -143,13 +159,19 @@ Future<void> handleRegistrationPelangganSubmit(
 
   // Lakukan proses pendaftaran di sini, meliputi username, email, password, dan foto profil (misalnya pengiriman data ke server)
   try {
-    User? currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
+    // Buat pengguna baru dengan email dan password
+    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    User? newUser = userCredential.user;
+    if (newUser == null) {
       navigateToLanding(context);
       return; // Pastikan untuk keluar dari fungsi jika pengguna tidak ada
     }
 
-    print('Current user ID: ${currentUser.uid}');
+    print('New user ID: ${newUser.uid}');
 
     // Upload foto profil ke Firebase Storage dan dapatkan URL gambar
     String photoUrl = await uploadProfilePhoto(username, selectedFile);
@@ -159,7 +181,7 @@ Future<void> handleRegistrationPelangganSubmit(
     String role = 'Pelanggan';
 
     // Tambahkan data pengguna ke Firestore
-    await FirebaseFirestore.instance.collection('Users').doc(currentUser.uid).set({
+    await FirebaseFirestore.instance.collection('Users').doc(newUser.uid).set({
       'username': username,
       'email': email,
       'photoUrl': photoUrl,
@@ -181,30 +203,30 @@ Future<void> handleRegistrationPelangganSubmit(
 
     // Navigasi ke halaman berhasil
     navigateToRegisterPelangganSuccess(context);
+
+    // Tunggu sebentar selama 3 detik
+    await Future.delayed(const Duration(seconds: 3));
+
+    // Navigasi ke halaman utama dan hapus semua rute sebelumnya
+    navigateToHome(context);
   } on FirebaseAuthException catch (e) {
     if (e.code == 'email-already-in-use') {
-      print('Email sudah terpakai');
+      navigateToRegisterPelangganUnsuccess(context, 'Email sudah terpakai');
+      await Future.delayed(const Duration(seconds: 3));
+      navigateToLanding(context);
+    } else {
+      navigateToRegisterPelangganUnsuccess(context, '${e.message}');
       await Future.delayed(const Duration(seconds: 3));
       navigateToLanding(context);
     }
   } catch (error) {
     // Tangani kesalahan jika terjadi
-    navigateToRegisterPelangganUnsuccess(context);
+    navigateToRegisterPelangganUnsuccess(context, '$error');
 
     await Future.delayed(const Duration(seconds: 3));
 
     navigateToLanding(context);
-    // ...
   }
-
-  // Setelah proses selesai, navigasi ke halaman berhasil
-  navigateToRegisterPelangganSuccess(context);
-
-  // Tunggu sebentar selama 3 detik
-  await Future.delayed(const Duration(seconds: 3));
-
-  // Navigasi ke halaman utama dan hapus semua rute sebelumnya
-  navigateToHome(context);
 }
 
 Future<String> uploadProfilePhoto(String username, File selectedFile) async {

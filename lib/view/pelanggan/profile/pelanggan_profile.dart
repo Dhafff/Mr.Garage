@@ -8,7 +8,6 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:mr_garage/common/widgets/modal/modal_chooser_2.dart';
 import 'package:mr_garage/utils/global.colors.dart';
 import 'package:mr_garage/view/pelanggan/navbar/pelanggan_navbar.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../auth/landing.view.dart';
 
@@ -60,11 +59,10 @@ class _PelangganProfileState extends State<PelangganProfile> {
           padding: const EdgeInsets.only(left: 20),
           child: IconButton(
             onPressed: () {
-              pushScreen(
-                context,
-                screen: const PelangganNavBar(),
-                withNavBar: false,
-                pageTransitionAnimation: PageTransitionAnimation.slideRight,
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const PelangganNavBar(),
+                ),
               );
             },
             icon: Icon(

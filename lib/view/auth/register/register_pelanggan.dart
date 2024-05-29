@@ -4,7 +4,6 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -226,27 +225,6 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
           ),
         );
         return;
-      }
-
-      try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim(),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: CustomSnackBarContent(
-              backgroundColor: HexColor('FAA300'),
-              titleMessage: 'Peringatan',
-              textMessage: "$e",
-              icon: Icons.warning_outlined,
-            ),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-          ),
-        );
       }
 
       setState(() {

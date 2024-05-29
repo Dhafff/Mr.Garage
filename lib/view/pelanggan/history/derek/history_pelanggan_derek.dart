@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../utils/global.colors.dart';
 
-class HistoryPelangganServis extends StatelessWidget {
-  const HistoryPelangganServis({super.key});
+class HistoryPelangganDerek extends StatelessWidget {
+  const HistoryPelangganDerek({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class HistoryPelangganServis extends StatelessWidget {
             ),
           ),
           Text(
-            'Kendaraanmu belum pernah\ndi servis',
+            'Kendaraanmu belum pernah\ndi derek',
             textAlign: TextAlign.center,
             style: GoogleFonts.openSans(
               fontSize: 17,
@@ -33,7 +33,7 @@ class HistoryPelangganServis extends StatelessWidget {
           ),
           const SizedBox(height: 15),
           Text(
-            'Coba servis kendaraanmu, nanti riwayatnya\nmuncul di sini',
+            'Semoga kendaraanmu baik-baik aja.',
             textAlign: TextAlign.center,
             style: GoogleFonts.openSans(
               fontSize: 13,

@@ -19,39 +19,36 @@ class ShopCategories extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.only(right: 15),
-        child: Column(
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: HexColor('F4F4F4'),
-              ),
-              child: Center(
-                child: Image.asset(
-                  iconUrl,
-                  width: 40,
-                  fit: BoxFit.contain,
-                ),
+      child: Column(
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: HexColor('F4F4F4'),
+            ),
+            child: Center(
+              child: Image.asset(
+                iconUrl,
+                width: 40,
+                fit: BoxFit.contain,
               ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              categoriesTitle,
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.openSans(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: GlobalColors.thirdColor,
-              ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            categoriesTitle,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.openSans(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: GlobalColors.thirdColor,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

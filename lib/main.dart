@@ -1,9 +1,9 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mr_garage/utils/theme/theme.dart';
 import 'package:mr_garage/view/auth/auth_page.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 //import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() async {
@@ -45,6 +45,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(debugShowCheckedModeBanner: false, home: AuthPage());
+    return MaterialApp(
+      themeMode: ThemeMode.system,
+      theme: AppTheme.systemTheme,
+      debugShowCheckedModeBanner: false,
+      home: const AuthPage(),
+    );
   }
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:mr_garage/common/widgets/notification/notification_card.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
+import 'package:google_fonts/google_fonts.dart';
+// import 'package:mr_garage/common/widgets/notification/notification_card.dart';
 
 import '../../../utils/global.colors.dart';
 import '../navbar/pelanggan_navbar.dart';
@@ -22,14 +21,16 @@ class PelangganNotification extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  pushScreen(
-                    context,
-                    screen: const PelangganNavBar(),
-                    withNavBar: false,
-                    pageTransitionAnimation: PageTransitionAnimation.slideRight,
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PelangganNavBar(),
+                    ),
                   );
                 },
-                child: const Icon(FeatherIcons.arrowLeft),
+                child: const Icon(
+                  FeatherIcons.arrowLeft,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 20),
               Text(
@@ -56,33 +57,37 @@ class PelangganNotification extends StatelessWidget {
           ),
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-            child: Column(
-              children: [
-                NotificationCard(
-                  onTap: () {},
-                  icon: Icons.build_outlined,
-                  notificationTitle: 'Servis kendaraan',
-                  notificationDesc: 'Sedang di servis • 30 menit yang lalu',
-                ),
-                NotificationCard(
-                  onTap: () {},
-                  icon: FeatherIcons.shoppingCart,
-                  notificationTitle: 'CVT X-ride 125',
-                  notificationDesc: 'Barang dikirim • 53 menit yang lalu',
-                ),
-                NotificationCard(
-                  onTap: () {},
-                  icon: Symbols.auto_towing,
-                  notificationTitle: 'Derek kendaraan',
-                  notificationDesc: 'Selesai di derek • 1 hari yang lalu',
-                ),
-              ],
+      body: Align(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/img/illustrator/vector_x.png',
+              width: 240,
+              height: 180,
             ),
-          ),
+            const SizedBox(height: 20),
+            Text(
+              'Belum ada notifikasi',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.openSans(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: GlobalColors.textColor,
+              ),
+            ),
+            const SizedBox(height: 15),
+            Text(
+              'Kalau udah servis atau belanja, notifikasinya\nbakal ditaruh di sini.',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.openSans(
+                fontSize: 13,
+                color: GlobalColors.thirdColor,
+                height: 1.7,
+              ),
+            ),
+          ],
         ),
       ),
     );

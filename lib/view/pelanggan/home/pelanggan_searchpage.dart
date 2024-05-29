@@ -19,19 +19,26 @@ class _PelangganSearchState extends State<PelangganSearchPage> {
         title: Container(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Pencarian',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: GlobalColors.textColor,
-                ),
+          child: Text(
+            'Pencarian',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: GlobalColors.textColor,
+            ),
+          ),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(70),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: GlobalColors.garis, width: 1.0),
               ),
-              const SizedBox(height: 20),
-              TextField(
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 30, right: 30, bottom: 15),
+              child: TextField(
                 keyboardType: TextInputType.name,
                 style: GoogleFonts.openSans(
                   fontSize: 12,
@@ -65,15 +72,15 @@ class _PelangganSearchState extends State<PelangganSearchPage> {
                   ),
                 ),
               ),
-            ],
+            ),
           ),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        toolbarHeight: 140,
         titleSpacing: 0,
         automaticallyImplyLeading: false,
       ),
+      backgroundColor: Colors.white,
       body: Align(
         alignment: Alignment.center,
         child: Column(
@@ -88,10 +95,10 @@ class _PelangganSearchState extends State<PelangganSearchPage> {
               ),
             ),
             Text(
-              'Kamu belum cari\napa-apa',
+              'Kamu belum cari apa-apa',
               textAlign: TextAlign.center,
               style: GoogleFonts.openSans(
-                fontSize: 18,
+                fontSize: 17,
                 fontWeight: FontWeight.w600,
                 color: GlobalColors.textColor,
               ),

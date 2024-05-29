@@ -7,4 +7,5 @@ class GlobalColors {
   static HexColor textColor = HexColor('00171F');
   static HexColor backLoginColor = HexColor('0AC2FF');
   static HexColor garis = HexColor('EEEEEE');
+  static HexColor textColor2 = HexColor('363636');
 }

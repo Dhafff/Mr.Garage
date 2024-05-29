@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_garage/utils/global.colors.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../navbar/pelanggan_navbar.dart';
 
@@ -25,11 +25,10 @@ class _ShopShoppingCartState extends State<ShopShoppingCart> {
             children: [
               GestureDetector(
                 onTap: () {
-                  pushScreen(
-                    context,
-                    screen: const PelangganNavBar(),
-                    withNavBar: false,
-                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PelangganNavBar(),
+                    ),
                   );
                 },
                 child: const Icon(
@@ -56,20 +55,37 @@ class _ShopShoppingCartState extends State<ShopShoppingCart> {
         elevation: 0,
         toolbarHeight: 60,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-            child: const Column(
-              children: [
-                Center(
-                  child: Text(
-                    'Keranjang belum terisi',
-                  ),
-                ),
-              ],
+      body: Align(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/img/illustrator/vector_box.png',
+              width: 240,
+              height: 180,
             ),
-          ),
+            const SizedBox(height: 20),
+            Text(
+              'Keranjang belum terisi',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.openSans(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: GlobalColors.textColor,
+              ),
+            ),
+            const SizedBox(height: 15),
+            Text(
+              'Ayo belanja berbagai kebutuhan\nkendaraanmu di Mr.Garage!',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.openSans(
+                fontSize: 13,
+                color: GlobalColors.thirdColor,
+                height: 1.7,
+              ),
+            ),
+          ],
         ),
       ),
     );

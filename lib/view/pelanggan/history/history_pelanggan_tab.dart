@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_garage/common/widgets/tab_item/tab_item.dart';
+import 'package:mr_garage/view/pelanggan/history/belanja/history_pelanggan_belanja.dart';
+import 'package:mr_garage/view/pelanggan/history/derek/history_pelanggan_derek.dart';
 import 'package:mr_garage/view/pelanggan/history/servis/history_pelanggan_servis.dart';
 
 import '../../../utils/global.colors.dart';
@@ -27,37 +29,44 @@ class HistoryPelangganTab extends StatelessWidget {
             ),
           ),
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(65),
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Container(
-                    height: 40,
-                    margin: const EdgeInsets.symmetric(horizontal: 30),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: GlobalColors.garis,
-                    ),
-                    child: TabBar(
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      dividerColor: Colors.transparent,
-                      indicator: BoxDecoration(
-                          color: GlobalColors.mainColor, borderRadius: BorderRadius.circular(15)),
-                      labelStyle: GoogleFonts.openSans(fontWeight: FontWeight.w600),
-                      unselectedLabelStyle: GoogleFonts.openSans(fontWeight: FontWeight.normal),
-                      labelColor: Colors.white,
-                      unselectedLabelColor: GlobalColors.thirdColor,
-                      tabs: const [
-                        TabItem(title: 'Servis'),
-                        TabItem(title: 'Derek'),
-                        TabItem(title: 'Belanja'),
-                      ],
+            preferredSize: const Size.fromHeight(67),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: GlobalColors.garis, width: 1.0),
+                ),
+              ),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Container(
+                      height: 40,
+                      margin: const EdgeInsets.symmetric(horizontal: 30),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: GlobalColors.garis,
+                      ),
+                      child: TabBar(
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        dividerColor: Colors.transparent,
+                        indicator: BoxDecoration(
+                            color: GlobalColors.mainColor, borderRadius: BorderRadius.circular(15)),
+                        labelStyle: GoogleFonts.openSans(fontWeight: FontWeight.w600),
+                        unselectedLabelStyle: GoogleFonts.openSans(fontWeight: FontWeight.normal),
+                        labelColor: Colors.white,
+                        unselectedLabelColor: GlobalColors.thirdColor,
+                        tabs: const [
+                          TabItem(title: 'Servis'),
+                          TabItem(title: 'Derek'),
+                          TabItem(title: 'Belanja'),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-              ],
+                  const SizedBox(height: 15),
+                ],
+              ),
             ),
           ),
           backgroundColor: Colors.white,
@@ -65,15 +74,12 @@ class HistoryPelangganTab extends StatelessWidget {
           titleSpacing: 0,
           automaticallyImplyLeading: false,
         ),
+        backgroundColor: Colors.white,
         body: const TabBarView(
           children: [
             HistoryPelangganServis(),
-            Center(
-              child: Text('Derek'),
-            ),
-            Center(
-              child: Text('Belanja'),
-            ),
+            HistoryPelangganDerek(),
+            HistoryPelangganBelanja(),
           ],
         ),
       ),

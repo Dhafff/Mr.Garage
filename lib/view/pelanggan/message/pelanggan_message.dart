@@ -2,25 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../utils/global.colors.dart';
-import '../../navbar/pelanggan_navbar.dart';
+import '../../../utils/global.colors.dart';
+import '../navbar/pelanggan_navbar.dart';
 
-class ShopTransaction extends StatefulWidget {
-  const ShopTransaction({super.key});
+class PelangganMessage extends StatelessWidget {
+  const PelangganMessage({super.key});
 
-  @override
-  _ShopTransactionState createState() => _ShopTransactionState();
-}
-
-class _ShopTransactionState extends State<ShopTransaction> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        surfaceTintColor: Colors.white,
         title: Container(
           padding: const EdgeInsets.symmetric(horizontal: 30),
-          width: double.infinity,
           child: Row(
             children: [
               GestureDetector(
@@ -31,14 +26,11 @@ class _ShopTransactionState extends State<ShopTransaction> {
                     ),
                   );
                 },
-                child: const Icon(
-                  FeatherIcons.arrowLeft,
-                  size: 20,
-                ),
+                child: const Icon(FeatherIcons.arrowLeft),
               ),
               const SizedBox(width: 20),
               Text(
-                'Transaksi',
+                'Pesan',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -48,12 +40,18 @@ class _ShopTransactionState extends State<ShopTransaction> {
             ],
           ),
         ),
-        titleSpacing: 0,
         backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        automaticallyImplyLeading: false,
         elevation: 0,
         toolbarHeight: 60,
+        titleSpacing: 0,
+        automaticallyImplyLeading: false,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(10),
+          child: Container(
+            color: GlobalColors.garis,
+            height: 1,
+          ),
+        ),
       ),
       body: Align(
         alignment: Alignment.center,
@@ -61,13 +59,13 @@ class _ShopTransactionState extends State<ShopTransaction> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/img/illustrator/vector_box.png',
+              'assets/img/illustrator/vector_mail.png',
               width: 240,
               height: 180,
             ),
             const SizedBox(height: 20),
             Text(
-              'Kamu belum pernah belanja',
+              'Belum ada pesan, nih',
               textAlign: TextAlign.center,
               style: GoogleFonts.openSans(
                 fontSize: 17,
@@ -77,7 +75,7 @@ class _ShopTransactionState extends State<ShopTransaction> {
             ),
             const SizedBox(height: 15),
             Text(
-              'Ayo belanja berbagai kebutuhan\nkendaraanmu di Mr.Garage!',
+              'Coba ngobrol sama montir tentang\nkendaraanmu.',
               textAlign: TextAlign.center,
               style: GoogleFonts.openSans(
                 fontSize: 13,
