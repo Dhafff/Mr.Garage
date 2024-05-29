@@ -27,7 +27,7 @@ class HistoryPelangganTab extends StatelessWidget {
             ),
           ),
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(60),
+            preferredSize: const Size.fromHeight(65),
             child: Column(
               children: [
                 ClipRRect(
@@ -56,7 +56,7 @@ class HistoryPelangganTab extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 20),
               ],
             ),
           ),
