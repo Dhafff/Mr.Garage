@@ -74,34 +74,36 @@ class _LandingPageState extends State<LandingPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 100),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/img/illustrator/vector_landing.png',
-                          width: 216,
-                          height: 180,
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Servis kendaraanmu',
-                          style: GoogleFonts.openSans(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: GlobalColors.textColor,
+                    Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/img/illustrator/vector_landing.png',
+                            width: 216,
+                            height: 180,
                           ),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          'kapanpun, di manapun',
-                          style: GoogleFonts.openSans(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: GlobalColors.textColor,
+                          const SizedBox(height: 10),
+                          Text(
+                            'Servis kendaraanmu',
+                            style: GoogleFonts.openSans(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: GlobalColors.textColor,
+                            ),
                           ),
-                        )
-                      ],
+                          const SizedBox(height: 5),
+                          Text(
+                            'kapanpun, di manapun',
+                            style: GoogleFonts.openSans(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: GlobalColors.textColor,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -112,7 +114,7 @@ class _LandingPageState extends State<LandingPage> {
                 bottom: 0,
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.29,
-                  padding: const EdgeInsets.only(top: 50, left: 30, right: 30, bottom: 40),
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(

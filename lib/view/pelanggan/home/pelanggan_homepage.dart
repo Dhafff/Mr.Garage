@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 // import 'package:hexcolor/hexcolor.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:mr_garage/common/widgets/garage/garage_card.dart';
+import 'package:mr_garage/common/widgets/modal/modal_add_vehicle.dart';
 // import 'package:mr_garage/common/widgets/list_view_card/list_card.dart';
 import 'package:mr_garage/common/widgets/modal/modal_chooser.dart';
 import 'package:mr_garage/common/widgets/product/product_card.dart';
@@ -815,7 +816,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
           onPressed1: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ServiceGarage(),
+                builder: (context) => const ServiceGarage(),
               ),
             );
           },
@@ -835,9 +836,7 @@ class _PelangganHomeState extends State<PelangganHomePage> {
       backgroundColor: Colors.white,
       context: context,
       builder: (context) {
-        return Container(
-          child: const Text('Tambah'),
-        );
+        return ModalAddVehicle();
       },
     );
   }

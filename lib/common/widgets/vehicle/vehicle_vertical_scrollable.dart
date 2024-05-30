@@ -27,7 +27,7 @@ class VehicleVerticalScrollable extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.54,
         height: 75,
         child: Row(

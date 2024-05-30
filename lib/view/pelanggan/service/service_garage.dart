@@ -4,6 +4,8 @@ import '../../../common/widgets/button/primary_button.dart';
 import '../navbar/pelanggan_navbar.dart';
 
 class ServiceGarage extends StatefulWidget {
+  const ServiceGarage({super.key});
+
   @override
   _ServiceGarageState createState() => _ServiceGarageState();
 }
@@ -27,7 +29,7 @@ class _ServiceGarageState extends State<ServiceGarage> {
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => PelangganNavBar()),
+                  MaterialPageRoute(builder: (context) => const PelangganNavBar()),
                 );
               },
             ),
@@ -42,8 +44,8 @@ class _ServiceGarageState extends State<ServiceGarage> {
                   height: 200,
                   alignment: Alignment.topCenter,
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF007EA7), // Set the color to 007EA7
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF007EA7), // Set the color to 007EA7
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
@@ -163,9 +165,9 @@ class _ServiceGarageState extends State<ServiceGarage> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(16.0),
                         child: TextFormField(
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Tanggal Servis',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
@@ -177,7 +179,7 @@ class _ServiceGarageState extends State<ServiceGarage> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(16.0),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -187,7 +189,7 @@ class _ServiceGarageState extends State<ServiceGarage> {
                                 // Add functionality for checkbox
                               },
                             ),
-                            Flexible(
+                            const Flexible(
                               child: Text(
                                 'Saya bersedia datang tepat waktu sesuai dengan jadwal yang ditentukan',
                                 style: TextStyle(fontSize: 16),

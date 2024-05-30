@@ -26,8 +26,9 @@ class ModalChooser extends StatelessWidget {
   final String imgLabel2;
   final VoidCallback? onPressed2;
 
+  @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 300,
       child: Column(
         children: [

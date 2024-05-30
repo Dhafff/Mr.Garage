@@ -14,11 +14,11 @@ class PrimaryButton extends StatelessWidget {
       padding: const EdgeInsets.only(top: 20.0),
       child: ElevatedButton(
         style: ButtonStyle(
-          minimumSize: const MaterialStatePropertyAll(
+          minimumSize: const WidgetStatePropertyAll(
             Size(320, 54),
           ),
-          foregroundColor: MaterialStateProperty.all(Colors.white),
-          backgroundColor: MaterialStateProperty.all(primaryButtonColor),
+          foregroundColor: WidgetStateProperty.all(Colors.white),
+          backgroundColor: WidgetStateProperty.all(primaryButtonColor),
         ),
         onPressed: onPressed,
         child: Text(

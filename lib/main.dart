@@ -4,7 +4,6 @@ import 'package:mr_garage/utils/theme/theme.dart';
 import 'package:mr_garage/view/auth/auth_page.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-//import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

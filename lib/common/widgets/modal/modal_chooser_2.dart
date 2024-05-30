@@ -28,6 +28,7 @@ class ModalChooser2 extends StatelessWidget {
   final String button2;
   final VoidCallback? onPressed2;
 
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(30),
