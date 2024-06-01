@@ -830,13 +830,14 @@ class _PelangganHomeState extends State<PelangganHomePage> {
 
   showModalAddVehicle() {
     showModalBottomSheet(
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       backgroundColor: Colors.white,
       context: context,
       builder: (context) {
-        return ModalAddVehicle();
+        return const ModalAddVehicle();
       },
     );
   }

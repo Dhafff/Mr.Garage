@@ -80,11 +80,12 @@ class ModalChooser2 extends StatelessWidget {
               ElevatedButton(
                 onPressed: onPressed1,
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: color1,
-                    minimumSize: const Size(170, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    )),
+                  backgroundColor: color1,
+                  minimumSize: const Size(170, 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 child: Text(
                   button1,
                   style: GoogleFonts.openSans(

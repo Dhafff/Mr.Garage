@@ -114,7 +114,7 @@ class _ServiceGarageState extends State<ServiceGarage> {
                                   const Text('MOTOR'),
                                   const Text('X-ride 125'),
                                   Image.asset(
-                                    'assets/img/vehicle/vehicle-1.png',
+                                    'assets/img/vehicle/yamaha-xride.png',
                                     width: 100,
                                     height: 100,
                                   ),
@@ -140,7 +140,7 @@ class _ServiceGarageState extends State<ServiceGarage> {
                                   const Text('MOBIL'),
                                   const Text('Kijang Innova'),
                                   Image.asset(
-                                    'assets/img/vehicle/vehicle-2.png',
+                                    'assets/img/vehicle/toyota-kijang_innova.png',
                                     width: 100,
                                     height: 100,
                                   ),

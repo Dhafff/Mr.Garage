@@ -27,308 +27,274 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                HexColor('33CCFF'),
-                GlobalColors.backLoginColor,
-                HexColor('00B8F5'),
-              ],
-            ),
-          ),
-          child: Stack(
+      backgroundColor: HexColor('00bbf9'),
+      appBar: AppBar(
+        title: Padding(
+          padding: const EdgeInsets.all(30),
+          child: Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                'assets/img/logo/logo-mrgarage.png',
-                                width: 40,
-                              ),
-                              const SizedBox(width: 10),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 9),
-                                child: Text(
-                                  'Mr.Garage',
-                                  style: GoogleFonts.openSans(
-                                    fontSize: 16,
-                                    color: GlobalColors.textColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/img/illustrator/vector_landing.png',
-                            width: 216,
-                            height: 180,
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            'Servis kendaraanmu',
-                            style: GoogleFonts.openSans(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: GlobalColors.textColor,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            'kapanpun, di manapun',
-                            style: GoogleFonts.openSans(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: GlobalColors.textColor,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
+              Image.asset(
+                'assets/img/logo/logo-mrgarage.png',
+                width: 40,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Mr.Garage',
+                style: GoogleFonts.openSans(
+                  fontSize: 16,
+                  color: GlobalColors.textColor,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 0.29,
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+            ],
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        titleSpacing: 0,
+        toolbarHeight: 100,
+      ),
+      body: Align(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/img/illustrator/vector_landing.png',
+              width: 216,
+              height: 180,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Servis kendaraanmu',
+              style: GoogleFonts.openSans(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: GlobalColors.textColor,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              'kapanpun, di manapun',
+              style: GoogleFonts.openSans(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: GlobalColors.textColor,
+              ),
+            )
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        height: MediaQuery.of(context).size.height * 0.3,
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.white,
+                  shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15),
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            backgroundColor: Colors.white,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15),
-                              ),
+                  builder: (BuildContext context) {
+                    return SizedBox(
+                      height: 300,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 5),
+                          Container(
+                            height: 5,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(5),
                             ),
-                            builder: (BuildContext context) {
-                              return SizedBox(
-                                height: 300,
-                                child: Column(
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 30, left: 30, right: 30),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Daftar',
+                                  style: GoogleFonts.openSans(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: GlobalColors.textColor),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  'Mau daftar jadi apa?',
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 13,
+                                    color: GlobalColors.thirdColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 30),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const SizedBox(height: 5),
-                                    Container(
-                                      height: 5,
-                                      width: 40,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius: BorderRadius.circular(5),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const RegisterPelangganPage(),
+                                          ),
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        minimumSize: const Size(165, 135),
+                                        backgroundColor: HexColor('eeeeee'),
+                                        shadowColor: Colors.transparent,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15),
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 30, left: 30, right: 30),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Text(
-                                            'Daftar',
-                                            style: GoogleFonts.openSans(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                                color: GlobalColors.textColor),
+                                          Image.asset(
+                                            'assets/img/icon/icons8-user.png',
+                                            width: 50,
                                           ),
                                           const SizedBox(height: 10),
                                           Text(
-                                            'Mau daftar jadi apa?',
+                                            'Pelanggan',
                                             style: GoogleFonts.openSans(
                                               fontSize: 13,
-                                              color: GlobalColors.thirdColor,
+                                              fontWeight: FontWeight.w600,
+                                              color: HexColor('1e1e1e'),
                                             ),
                                           ),
-                                          const SizedBox(height: 30),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) => const RegisterPelangganPage(),
-                                                    ),
-                                                  );
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  minimumSize: const Size(165, 135),
-                                                  backgroundColor: HexColor('eeeeee'),
-                                                  shadowColor: Colors.transparent,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(15),
-                                                  ),
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Image.asset(
-                                                      'assets/img/icon/icons8-user.png',
-                                                      width: 50,
-                                                    ),
-                                                    const SizedBox(height: 10),
-                                                    Text(
-                                                      'Pelanggan',
-                                                      style: GoogleFonts.openSans(
-                                                        fontSize: 13,
-                                                        fontWeight: FontWeight.w600,
-                                                        color: HexColor('1e1e1e'),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(width: 20),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) => const RegisterMontirPage(),
-                                                    ),
-                                                  );
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  minimumSize: const Size(165, 135),
-                                                  backgroundColor: HexColor('eeeeee'),
-                                                  shadowColor: Colors.transparent,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(15),
-                                                  ),
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Image.asset(
-                                                      'assets/img/icon/icons8-mechanic.png',
-                                                      width: 50,
-                                                    ),
-                                                    const SizedBox(height: 10),
-                                                    Text(
-                                                      'Montir',
-                                                      style: GoogleFonts.openSans(
-                                                        fontSize: 13,
-                                                        fontWeight: FontWeight.w600,
-                                                        color: HexColor('1e1e1e'),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const RegisterMontirPage(),
+                                          ),
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        minimumSize: const Size(165, 135),
+                                        backgroundColor: HexColor('eeeeee'),
+                                        shadowColor: Colors.transparent,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15),
+                                        ),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            'assets/img/icon/icons8-mechanic.png',
+                                            width: 50,
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            'Montir',
+                                            style: GoogleFonts.openSans(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600,
+                                              color: HexColor('1e1e1e'),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
                                   ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: GlobalColors.mainColor,
-                          minimumSize: const Size(355, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        child: Text(
-                          'Daftar',
-                          style: GoogleFonts.openSans(
-                              fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(height: 15),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            child: Divider(
-                              color: GlobalColors.garis,
-                              thickness: 0.5,
-                              indent: 60,
-                              endIndent: 10,
-                            ),
-                          ),
-                          Text(
-                            'atau',
-                            style: GoogleFonts.openSans(
-                              fontSize: 12,
-                              color: GlobalColors.thirdColor,
-                            ),
-                          ),
-                          Flexible(
-                            child: Divider(
-                              color: GlobalColors.garis,
-                              thickness: 0.5,
-                              indent: 10,
-                              endIndent: 60,
+                                )
+                              ],
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 15),
-                      OutlinedButton(
-                        onPressed: () {
-                          _showLoginModal(context);
-                        },
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: GlobalColors.mainColor,
-                          ),
-                          minimumSize: const Size(355, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        child: Text(
-                          'Masuk',
-                          style: GoogleFonts.openSans(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: GlobalColors.mainColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: GlobalColors.mainColor,
+                minimumSize: Size(MediaQuery.of(context).size.width, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
                 ),
               ),
-            ],
-          ),
+              child: Text(
+                'Daftar',
+                style: GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
+              ),
+            ),
+            const SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Divider(
+                    color: GlobalColors.garis,
+                    thickness: 0.5,
+                    indent: 60,
+                    endIndent: 10,
+                  ),
+                ),
+                Text(
+                  'atau',
+                  style: GoogleFonts.openSans(
+                    fontSize: 12,
+                    color: GlobalColors.thirdColor,
+                  ),
+                ),
+                Flexible(
+                  child: Divider(
+                    color: GlobalColors.garis,
+                    thickness: 0.5,
+                    indent: 10,
+                    endIndent: 60,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 15),
+            OutlinedButton(
+              onPressed: () {
+                _showLoginModal(context);
+              },
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(
+                  color: GlobalColors.mainColor,
+                ),
+                minimumSize: Size(MediaQuery.of(context).size.width, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              child: Text(
+                'Masuk',
+                style: GoogleFonts.openSans(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: GlobalColors.mainColor,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

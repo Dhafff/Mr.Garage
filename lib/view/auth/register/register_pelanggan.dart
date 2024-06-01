@@ -934,183 +934,195 @@ class _RegisterPelangganPageState extends State<RegisterPelangganPage> {
       buildStep3Form(),
     ];
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Container(
-                              padding: const EdgeInsets.all(30),
-                              height: 270,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15),
-                                ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 35,
-                                    height: 35,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: HexColor('E82327'),
-                                    ),
-                                    child: const Icon(
-                                      FeatherIcons.arrowLeft,
-                                      size: 15,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Text(
-                                    'Kembali ke halaman awal?',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      color: GlobalColors.textColor,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'Semua upaya yang sudah kamu lakuin bakal ke reset',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: GlobalColors.thirdColor,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: GlobalColors.mainColor,
-                                            minimumSize: const Size(170, 40),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(10),
-                                            )),
-                                        child: Text(
-                                          'Tidak',
-                                          style: GoogleFonts.openSans(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                      OutlinedButton(
-                                        onPressed: () {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (BuildContext context) => const LandingPage(),
-                                            ),
-                                          );
-                                        },
-                                        style: OutlinedButton.styleFrom(
-                                          side: BorderSide(
-                                            color: GlobalColors.mainColor,
-                                          ),
-                                          minimumSize: const Size(170, 40),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          'Kembali',
-                                          style: GoogleFonts.openSans(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: GlobalColors.mainColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            );
-                          });
-                    },
-                    child: const SizedBox(
-                      width: 25,
-                      height: 25,
-                      child: Icon(FeatherIcons.arrowLeft),
-                    )),
-                const SizedBox(height: 50),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (BuildContext context) => const LandingPage()));
-                  },
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        'assets/img/logo/logo-mrgarage.png',
-                        width: 40,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 30),
+          child: GestureDetector(
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return Container(
+                    padding: const EdgeInsets.all(30),
+                    height: 270,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
                       ),
-                      const SizedBox(width: 10),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: Text(
-                          'Mr.Garage',
-                          style: GoogleFonts.openSans(
-                            fontSize: 18,
-                            color: GlobalColors.textColor,
-                            fontWeight: FontWeight.bold,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 35,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: HexColor('E82327'),
+                          ),
+                          child: const Icon(
+                            FeatherIcons.arrowLeft,
+                            size: 15,
+                            color: Colors.white,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 30),
-                Text(
-                  _step[_pageIndex]['judul']!,
-                  style: GoogleFonts.openSans(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                    color: GlobalColors.textColor,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  _step[_pageIndex]['deskripsi']!,
-                  style: GoogleFonts.openSans(fontSize: 13, color: GlobalColors.thirdColor),
-                ),
-                forms[_pageIndex],
-                ElevatedButton(
-                  onPressed: () => nextStep(),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: GlobalColors.mainColor,
-                      minimumSize: const Size(355, 55),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      )),
-                  child: Text(
-                    _step[_pageIndex]['tombol'],
-                    style: GoogleFonts.openSans(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                        const SizedBox(height: 20),
+                        Text(
+                          'Kembali ke halaman awal?',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: GlobalColors.textColor,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Semua upaya yang sudah kamu lakuin bakal ke reset',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: GlobalColors.thirdColor,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: GlobalColors.mainColor,
+                                  minimumSize: const Size(170, 40),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  )),
+                              child: Text(
+                                'Tidak',
+                                style: GoogleFonts.openSans(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            OutlinedButton(
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) => const LandingPage(),
+                                  ),
+                                );
+                              },
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(
+                                  color: GlobalColors.mainColor,
+                                ),
+                                minimumSize: const Size(170, 40),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: Text(
+                                'Kembali',
+                                style: GoogleFonts.openSans(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: GlobalColors.mainColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
-                  ),
+                  );
+                },
+              );
+            },
+            child: const SizedBox(
+              width: 25,
+              height: 25,
+              child: Icon(FeatherIcons.arrowLeft),
+            ),
+          ),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(85),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 30),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      'assets/img/logo/logo-mrgarage.png',
+                      width: 40,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Mr.Garage',
+                      style: GoogleFonts.openSans(
+                        fontSize: 18,
+                        color: GlobalColors.textColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
+              const SizedBox(height: 30),
+            ],
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _step[_pageIndex]['judul']!,
+                style: GoogleFonts.openSans(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: GlobalColors.textColor,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                _step[_pageIndex]['deskripsi']!,
+                style: GoogleFonts.openSans(fontSize: 13, color: GlobalColors.thirdColor),
+              ),
+              forms[_pageIndex],
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
+        child: ElevatedButton(
+          onPressed: () => nextStep(),
+          style: ElevatedButton.styleFrom(
+              backgroundColor: GlobalColors.mainColor,
+              minimumSize: const Size(355, 55),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              )),
+          child: Text(
+            _step[_pageIndex]['tombol'],
+            style: GoogleFonts.openSans(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
             ),
           ),
         ),

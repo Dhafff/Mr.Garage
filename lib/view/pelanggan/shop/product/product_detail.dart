@@ -6,6 +6,7 @@ import 'package:mr_garage/common/widgets/list_view_card/list_card_2.dart';
 import 'package:mr_garage/utils/global.colors.dart';
 import 'package:mr_garage/view/pelanggan/navbar/pelanggan_navbar.dart';
 import 'package:mr_garage/view/pelanggan/shop/navbar/shop_navbar.dart';
+import 'package:mr_garage/view/pelanggan/shop/product/product_checkout.dart';
 
 import '../../../../common/widgets/product/product_card.dart';
 
@@ -224,7 +225,7 @@ class _ProductDetailState extends State<ProductDetail> {
               imgUrl: 'assets/img/icon/icons8-voucher.png',
               titleList: 'Pasang kuponnya yuk',
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -259,7 +260,7 @@ class _ProductDetailState extends State<ProductDetail> {
                 height: 1.8,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -314,7 +315,7 @@ class _ProductDetailState extends State<ProductDetail> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
             SizedBox(
               height: 233,
               child: ListView(
@@ -447,7 +448,16 @@ class _ProductDetailState extends State<ProductDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ProductCheckout(
+                          previousAction: 'Beli',
+                          imgUrl: widget.imageUrl,
+                        ),
+                      ),
+                    );
+                  },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
                       color: GlobalColors.mainColor,
