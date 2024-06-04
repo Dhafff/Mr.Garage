@@ -13,6 +13,7 @@ import 'package:mr_garage/common/widgets/modal/modal_add_vehicle.dart';
 // import 'package:mr_garage/common/widgets/list_view_card/list_card.dart';
 import 'package:mr_garage/common/widgets/modal/modal_chooser.dart';
 import 'package:mr_garage/common/widgets/product/product_card.dart';
+import 'package:mr_garage/common/widgets/shimmer/skelton.dart';
 import 'package:mr_garage/utils/global.colors.dart';
 import 'package:mr_garage/view/auth/landing.view.dart';
 import 'package:mr_garage/common/widgets/images/rounded_banner_images.dart';
@@ -38,6 +39,8 @@ class _PelangganHomeState extends State<PelangganHomePage> {
   String photoUrl = '';
   User? user = FirebaseAuth.instance.currentUser;
 
+  late bool isLoading;
+
   // controller vehicle
   final controllerVehicle = Get.put(HomeVehicleController());
 
@@ -46,6 +49,12 @@ class _PelangganHomeState extends State<PelangganHomePage> {
 
   @override
   void initState() {
+    isLoading = true;
+    Future.delayed(const Duration(seconds: 5), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
     super.initState();
     waktuNotifier.value = getWaktuSekarang();
     updateWaktu();
@@ -328,134 +337,139 @@ class _PelangganHomeState extends State<PelangganHomePage> {
           child: Column(
             children: [
               // -- Container kendaraan
-              Container(
-                width: double.infinity,
-                height: 120,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: GlobalColors.mainColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      height: 100,
+              isLoading
+                  ? const Skelton(
+                      height: 120,
+                      width: double.infinity,
+                    )
+                  : Container(
+                      width: double.infinity,
+                      height: 120,
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        color: Colors.white,
+                        color: GlobalColors.mainColor,
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       child: Row(
                         children: [
-                          const SizedBox(width: 10),
-                          Image.asset(
-                            'assets/img/illustrator/vector_null_2.png',
-                            width: 60,
-                            height: 49,
-                          ),
-                          const SizedBox(width: 10),
-                          Text(
-                            'Kendaraan belum\nditambahkan',
-                            style: GoogleFonts.openSans(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: GlobalColors.textColor2,
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              color: Colors.white,
                             ),
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 10),
+                                Image.asset(
+                                  'assets/img/illustrator/vector_null_2.png',
+                                  width: 60,
+                                  height: 49,
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  'Kendaraan belum\nditambahkan',
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: GlobalColors.textColor2,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            // .. Uncomment kalo ada kendaraan
+                            // child: Row(
+                            //   children: [
+                            //     const SizedBox(width: 5),
+                            //     Center(
+                            //       child: Obx(
+                            //         () => Column(
+                            //           mainAxisSize: MainAxisSize.min,
+                            //           children: [
+                            //             for (int i = 0; i < 2; i++)
+                            //               Container(
+                            //                 width: 3,
+                            //                 height: controllerVehicle.carouselCurrentIndex.value == i ? 15 : 10,
+                            //                 decoration: BoxDecoration(
+                            //                   color: controllerVehicle.carouselCurrentIndex.value == i
+                            //                       ? GlobalColors.mainColor
+                            //                       : HexColor('e5e5e5'),
+                            //                   borderRadius: BorderRadius.circular(3),
+                            //                 ),
+                            //                 margin: const EdgeInsets.only(bottom: 3),
+                            //               ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     const SizedBox(width: 5),
+                            //     CarouselSlider(
+                            //       items: [
+                            //         VehicleVerticalScrollable(
+                            //           onTap: () {},
+                            //           imageUrl: 'assets/img/vehicle/vehicle-1.png',
+                            //           vehicleCategory: 'Motor',
+                            //           vehicleName: 'X-ride 125',
+                            //         ),
+                            //         VehicleVerticalScrollable(
+                            //           onTap: () {},
+                            //           imageUrl: 'assets/img/vehicle/vehicle-2.png',
+                            //           vehicleCategory: 'Mobil',
+                            //           vehicleName: 'Kijang Innova',
+                            //         ),
+                            //       ],
+                            //       options: CarouselOptions(
+                            //         aspectRatio: 2.23,
+                            //         onPageChanged: (index, _) => controllerVehicle.updatePageIndicator(index),
+                            //         viewportFraction: 1,
+                            //         initialPage: 0,
+                            //         autoPlay: false,
+                            //         enableInfiniteScroll: true,
+                            //         scrollDirection: Axis.vertical,
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                           ),
+                          const SizedBox(width: 20),
+                          GestureDetector(
+                            onTap: () {
+                              showModalAddVehicle();
+                            },
+                            child: SizedBox(
+                              width: 55,
+                              height: 50,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 25,
+                                    height: 25,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(7),
+                                    ),
+                                    child: Icon(
+                                      FeatherIcons.plus,
+                                      size: 15,
+                                      color: GlobalColors.mainColor,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    'Tambah',
+                                    style: GoogleFonts.openSans(
+                                        color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
                         ],
                       ),
-
-                      // .. Uncomment kalo ada kendaraan
-                      // child: Row(
-                      //   children: [
-                      //     const SizedBox(width: 5),
-                      //     Center(
-                      //       child: Obx(
-                      //         () => Column(
-                      //           mainAxisSize: MainAxisSize.min,
-                      //           children: [
-                      //             for (int i = 0; i < 2; i++)
-                      //               Container(
-                      //                 width: 3,
-                      //                 height: controllerVehicle.carouselCurrentIndex.value == i ? 15 : 10,
-                      //                 decoration: BoxDecoration(
-                      //                   color: controllerVehicle.carouselCurrentIndex.value == i
-                      //                       ? GlobalColors.mainColor
-                      //                       : HexColor('e5e5e5'),
-                      //                   borderRadius: BorderRadius.circular(3),
-                      //                 ),
-                      //                 margin: const EdgeInsets.only(bottom: 3),
-                      //               ),
-                      //           ],
-                      //         ),
-                      //       ),
-                      //     ),
-                      //     const SizedBox(width: 5),
-                      //     CarouselSlider(
-                      //       items: [
-                      //         VehicleVerticalScrollable(
-                      //           onTap: () {},
-                      //           imageUrl: 'assets/img/vehicle/vehicle-1.png',
-                      //           vehicleCategory: 'Motor',
-                      //           vehicleName: 'X-ride 125',
-                      //         ),
-                      //         VehicleVerticalScrollable(
-                      //           onTap: () {},
-                      //           imageUrl: 'assets/img/vehicle/vehicle-2.png',
-                      //           vehicleCategory: 'Mobil',
-                      //           vehicleName: 'Kijang Innova',
-                      //         ),
-                      //       ],
-                      //       options: CarouselOptions(
-                      //         aspectRatio: 2.23,
-                      //         onPageChanged: (index, _) => controllerVehicle.updatePageIndicator(index),
-                      //         viewportFraction: 1,
-                      //         initialPage: 0,
-                      //         autoPlay: false,
-                      //         enableInfiniteScroll: true,
-                      //         scrollDirection: Axis.vertical,
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
                     ),
-                    const SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        showModalAddVehicle();
-                      },
-                      child: SizedBox(
-                        width: 55,
-                        height: 50,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 25,
-                              height: 25,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                              child: Icon(
-                                FeatherIcons.plus,
-                                size: 15,
-                                color: GlobalColors.mainColor,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              'Tambah',
-                              style: GoogleFonts.openSans(
-                                  color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
               const SizedBox(height: 20),
 
               // -- Menu
@@ -490,37 +504,55 @@ class _PelangganHomeState extends State<PelangganHomePage> {
               const SizedBox(height: 20),
 
               // -- Banner ad carousel
-              CarouselSlider(
-                options: CarouselOptions(
-                  viewportFraction: 1,
-                  autoPlay: true,
-                  initialPage: 0,
-                  aspectRatio: 2.0,
-                ),
-                items: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: RoundedBannerImage(
-                      imageUrl: 'assets/img/banner/banner-1.jpg',
-                      onPressed: () {},
+              isLoading
+                  ? CarouselSlider(
+                      items: const [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          child: Skelton(
+                            width: double.infinity,
+                            height: 180,
+                          ),
+                        ),
+                      ],
+                      options: CarouselOptions(
+                        viewportFraction: 1,
+                        autoPlay: true,
+                        initialPage: 0,
+                        aspectRatio: 2.0,
+                      ),
+                    )
+                  : CarouselSlider(
+                      options: CarouselOptions(
+                        viewportFraction: 1,
+                        autoPlay: true,
+                        initialPage: 0,
+                        aspectRatio: 2.0,
+                      ),
+                      items: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: RoundedBannerImage(
+                            imageUrl: 'assets/img/banner/banner-1.jpg',
+                            onPressed: () {},
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: RoundedBannerImage(
+                            imageUrl: 'assets/img/banner/banner-2.jpg',
+                            onPressed: () {},
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: RoundedBannerImage(
+                            imageUrl: 'assets/img/banner/banner-3.jpg',
+                            onPressed: () {},
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: RoundedBannerImage(
-                      imageUrl: 'assets/img/banner/banner-2.jpg',
-                      onPressed: () {},
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: RoundedBannerImage(
-                      imageUrl: 'assets/img/banner/banner-3.jpg',
-                      onPressed: () {},
-                    ),
-                  ),
-                ],
-              ),
               const SizedBox(height: 20),
 
               // Riwayat

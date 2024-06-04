@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_garage/common/widgets/comments/comments_product.dart';
-import 'package:mr_garage/common/widgets/list_view_card/list_card_2.dart';
+import 'package:mr_garage/common/widgets/list_view_card/list_card_3.dart';
+import 'package:mr_garage/common/widgets/modal/modal_add_details.dart';
 import 'package:mr_garage/utils/global.colors.dart';
 import 'package:mr_garage/view/pelanggan/navbar/pelanggan_navbar.dart';
 import 'package:mr_garage/view/pelanggan/shop/navbar/shop_navbar.dart';
@@ -220,10 +221,12 @@ class _ProductDetailState extends State<ProductDetail> {
               ],
             ),
             const SizedBox(height: 20),
-            ListCard2(
+            ListCard3(
               onTap: () {},
-              imgUrl: 'assets/img/icon/icons8-voucher.png',
-              titleList: 'Pasang kuponnya yuk',
+              image: 'assets/img/bengkel/bengkel-3.jpg',
+              storeName: 'Gudang Sparepart Bandung',
+              location: 'Kota Bandung',
+              active: 'Aktif 7 menit yang lalu',
             ),
             const SizedBox(height: 25),
             Row(
@@ -322,15 +325,6 @@ class _ProductDetailState extends State<ProductDetail> {
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 children: [
-                  ProductCard(
-                    onTap: () {},
-                    imageUrl: 'assets/img/product/cvt.jpg',
-                    productTitle: 'Cvt Yamaha X-ride',
-                    productPrice: '1.000.000',
-                    productCategory: 'motor',
-                    discount: '50',
-                  ),
-                  const SizedBox(width: 20),
                   ProductCard(
                     onTap: () {},
                     imageUrl: 'assets/img/product/ban_michellin.jpg',
@@ -477,7 +471,9 @@ class _ProductDetailState extends State<ProductDetail> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalAddDetails(context);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: GlobalColors.mainColor,
                     minimumSize: const Size(170, 50),
@@ -500,6 +496,25 @@ class _ProductDetailState extends State<ProductDetail> {
           ],
         ),
       ),
+    );
+  }
+
+  showModalAddDetails(context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      backgroundColor: Colors.white,
+      builder: (context) {
+        return ModalAddDetails(
+          image: widget.imageUrl,
+          titleProduct: widget.productTitle,
+          price: widget.productDiscountPrice,
+          textButton: 'Tambah ke keranjang',
+        );
+      },
     );
   }
 }

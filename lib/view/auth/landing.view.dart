@@ -26,6 +26,8 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool medium = isMedium(context);
+
     return Scaffold(
       backgroundColor: HexColor('00bbf9'),
       appBar: AppBar(
@@ -86,7 +88,9 @@ class _LandingPageState extends State<LandingPage> {
       ),
       bottomNavigationBar: Container(
         height: MediaQuery.of(context).size.height * 0.3,
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+        padding: medium
+            ? const EdgeInsets.symmetric(horizontal: 30, vertical: 30)
+            : const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
