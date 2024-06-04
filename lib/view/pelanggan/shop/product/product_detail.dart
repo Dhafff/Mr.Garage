@@ -21,14 +21,13 @@ class ProductDetail extends StatefulWidget {
     required this.productTitle,
     this.isFavorite = false,
     required this.productActualPrice,
-    required this.productDiscountPrice,
+    required this.discount,
     this.currencySign = 'Rp',
     required this.rating,
     required this.userRating,
     required this.review,
     required this.reviewer,
     required this.sold,
-    required this.discount,
     required this.descProduct,
   });
 
@@ -36,17 +35,20 @@ class ProductDetail extends StatefulWidget {
   final String imageUrl;
   final String category;
   final String productTitle;
-  final String productActualPrice;
-  final String productDiscountPrice;
+  final int productActualPrice;
+  final double discount;
   final String currencySign;
   final double rating;
   final double userRating;
   final int review;
   final int sold;
   final String reviewer;
-  final String discount;
   final String descProduct;
   bool isFavorite;
+
+  int get productDiscountPrice {
+    return (productActualPrice * (1 - discount)).toInt();
+  }
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
@@ -62,7 +64,7 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   void checkDiscount() {
-    if (widget.discount.isNotEmpty && widget.discount != '0') {
+    if (widget.discount > 0.01) {
       setState(() {
         isDiscount = true;
       });
@@ -400,7 +402,7 @@ class _ProductDetailState extends State<ProductDetail> {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            widget.currencySign + widget.productActualPrice,
+                            '${widget.currencySign}${widget.productActualPrice}',
                             style: TextStyle(
                               fontFamily: 'Open Sans',
                               fontSize: 10,
@@ -411,9 +413,19 @@ class _ProductDetailState extends State<ProductDetail> {
                           const SizedBox(height: 5),
                         ],
                       ),
+                    if (isDiscount == false)
+                      Text(
+                        'Harga',
+                        style: TextStyle(
+                          fontFamily: 'Open Sans',
+                          fontSize: 13,
+                          color: GlobalColors.secondColor,
+                        ),
+                      ),
+                    const SizedBox(height: 5),
                     if (isDiscount == true)
                       Text(
-                        widget.currencySign + widget.productDiscountPrice,
+                        '${widget.currencySign}${widget.productDiscountPrice}',
                         style: TextStyle(
                             fontFamily: 'Open Sans',
                             fontSize: 20,
@@ -422,7 +434,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       ),
                     if (isDiscount == false)
                       Text(
-                        widget.currencySign + widget.productActualPrice,
+                        '${widget.currencySign}${widget.productActualPrice}',
                         style: TextStyle(
                             fontFamily: 'Open Sans',
                             fontSize: 20,
@@ -511,7 +523,7 @@ class _ProductDetailState extends State<ProductDetail> {
         return ModalAddDetails(
           image: widget.imageUrl,
           titleProduct: widget.productTitle,
-          price: widget.productDiscountPrice,
+          price: isDiscount ? widget.productDiscountPrice : widget.productActualPrice,
           textButton: 'Tambah ke keranjang',
         );
       },

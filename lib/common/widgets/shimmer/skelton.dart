@@ -20,7 +20,14 @@ class Skelton extends StatelessWidget {
       child: Shimmer.fromColors(
         baseColor: GlobalColors.garis,
         highlightColor: Colors.white,
-        child: const Text('Shimmer'),
+        child: Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            color: GlobalColors.garis,
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
       ),
     );
   }

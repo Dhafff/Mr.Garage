@@ -18,7 +18,7 @@ class ModalAddDetails extends StatefulWidget {
 
   final String image;
   final String titleProduct;
-  final String price;
+  final int price;
   final String currencySign;
   int quantity;
   final String textButton;
@@ -31,7 +31,7 @@ class _ModalAddDetailsState extends State<ModalAddDetails> {
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _catatanController = TextEditingController();
 
-  double totalPrice = 0;
+  int totalPrice = 0;
 
   @override
   void initState() {
@@ -70,8 +70,7 @@ class _ModalAddDetailsState extends State<ModalAddDetails> {
 
   void updateTotalPrice() {
     setState(() {
-      double pricePerItemDouble = double.tryParse(widget.price) ?? 0.0;
-      totalPrice = widget.quantity * pricePerItemDouble;
+      totalPrice = widget.quantity * widget.price;
     });
   }
 
@@ -264,7 +263,7 @@ class _ModalAddDetailsState extends State<ModalAddDetails> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            widget.currencySign + widget.price,
+                            '${widget.currencySign}$totalPrice',
                             style: TextStyle(
                               fontFamily: 'Open Sans',
                               fontSize: 20,
