@@ -14,6 +14,9 @@ class ModalAddDetails extends StatefulWidget {
     this.currencySign = 'Rp',
     this.quantity = 1,
     required this.textButton,
+    required this.onTap,
+    required this.catatan,
+    required this.quantityController,
   });
 
   final String image;
@@ -22,6 +25,9 @@ class ModalAddDetails extends StatefulWidget {
   final String currencySign;
   int quantity;
   final String textButton;
+  final VoidCallback onTap;
+  final TextEditingController catatan;
+  final TextEditingController quantityController;
 
   @override
   State<ModalAddDetails> createState() => _ModalAddDetailsState();
@@ -29,7 +35,6 @@ class ModalAddDetails extends StatefulWidget {
 
 class _ModalAddDetailsState extends State<ModalAddDetails> {
   final TextEditingController _quantityController = TextEditingController();
-  final TextEditingController _catatanController = TextEditingController();
 
   int totalPrice = 0;
 
@@ -101,9 +106,9 @@ class _ModalAddDetailsState extends State<ModalAddDetails> {
                       height: 100,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
-                        child: Image.asset(
-                          widget.image,
-                          fit: BoxFit.contain,
+                        child: Image(
+                          image: NetworkImage(widget.image),
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -113,6 +118,8 @@ class _ModalAddDetailsState extends State<ModalAddDetails> {
                       children: [
                         Text(
                           widget.titleProduct,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontFamily: 'Open Sans',
                             fontSize: 15,
@@ -212,7 +219,7 @@ class _ModalAddDetailsState extends State<ModalAddDetails> {
                 ),
                 const SizedBox(height: 15),
                 TextField(
-                  controller: _catatanController,
+                  controller: widget.catatan,
                   maxLines: 6,
                   style: GoogleFonts.openSans(fontSize: 12),
                   decoration: InputDecoration(
@@ -281,7 +288,7 @@ class _ModalAddDetailsState extends State<ModalAddDetails> {
                   ),
                   const SizedBox(height: 15),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: widget.onTap,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: GlobalColors.mainColor,
                       minimumSize: Size(MediaQuery.of(context).size.width, 50),

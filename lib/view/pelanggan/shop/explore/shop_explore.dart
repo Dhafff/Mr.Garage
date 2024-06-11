@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_garage/common/widgets/categories/shop_categories.dart';
+import 'package:mr_garage/features/model/product.dart';
 import 'package:mr_garage/view/pelanggan/navbar/pelanggan_navbar.dart';
 import 'package:mr_garage/view/pelanggan/shop/product/product_detail.dart';
 
 import '../../../../common/widgets/images/rounded_banner_images.dart';
 import '../../../../common/widgets/product/product_card.dart';
+import '../../../../common/widgets/shimmer/skelton.dart';
 import '../../../../utils/global.colors.dart';
 
 class ShopExplore extends StatefulWidget {
@@ -18,6 +20,28 @@ class ShopExplore extends StatefulWidget {
 }
 
 class _ShopExploreState extends State<ShopExplore> {
+  final ProductShop _productShop = ProductShop();
+  late Future<List<Product>> _productsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = _productShop.fetchProducts();
+  }
+
+  String timeAgo(DateTime lastActive) {
+    final now = DateTime.now();
+    final difference = now.difference(lastActive);
+
+    if (difference.inMinutes < 60) {
+      return 'Aktif ${difference.inMinutes} menit yang lalu';
+    } else if (difference.inHours < 24) {
+      return 'Aktif ${difference.inHours} jam yang lalu';
+    } else {
+      return 'Aktif ${difference.inDays} hari yang lalu';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -193,354 +217,165 @@ class _ShopExploreState extends State<ShopExplore> {
 
               const SizedBox(height: 20),
 
-              // -- Penawaran khusus
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Penawaran khusus',
-                    style: GoogleFonts.openSans(
-                      color: GlobalColors.textColor,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: GlobalColors.mainColor,
-                      minimumSize: const Size(80, 30),
-                      shadowColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text(
-                      'Lihat semua',
-                      style: GoogleFonts.openSans(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(height: 15),
-              SizedBox(
-                height: 233,
-                child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    ProductCard(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ProductDetail(
-                              previousPage: 'ShopExplore',
-                              imageUrl: 'assets/img/product/cvt.jpg',
-                              category: 'Lainnya',
-                              productTitle: 'Cvt Yamaha X-ride',
-                              productActualPrice: 2000000,
-                              rating: 4.5,
-                              userRating: 5.0,
-                              review: 32,
-                              reviewer: 'Alien Car',
-                              sold: 189,
-                              discount: 0.50,
-                              descProduct:
-                                  'Barang original Yamaha CVT Yamaha X-ride 125 CVT merupakan kependekan dari Continuously Variable Transmission, di mana komponen tersebut memiliki',
-                            ),
-                          ),
-                        );
-                      },
-                      imageUrl: 'assets/img/product/cvt.jpg',
-                      productTitle: 'Cvt Yamaha X-ride',
-                      productPrice: '1.000.000',
-                      productCategory: 'motor',
-                      discount: '50',
-                    ),
-                    const SizedBox(width: 20),
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/ban_michellin.jpg',
-                      productTitle: 'Ban Michellin Pilot Ring',
-                      productPrice: '480.000',
-                      productCategory: 'motor',
-                      discount: '20',
-                    ),
-                    const SizedBox(width: 20),
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/ban_bridgestone.jpg',
-                      productTitle: 'Bridgestone Dueler',
-                      productPrice: '975.000',
-                      productCategory: 'mobil',
-                      discount: '35',
-                    ),
-                    const SizedBox(width: 20),
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/aki_gs.jpg',
-                      productTitle: 'Aki Mobil Innova Diesel',
-                      productPrice: '1.293.000',
-                      productCategory: 'mobil',
-                      discount: '40',
-                    ),
-                  ],
-                ),
+              // Penawaran khusus
+              _buildSectionTitle('Penawaran khusus'),
+              const SizedBox(height: 10),
+              _buildProductListFutureBuilder(
+                filter: (product) => product.discount > 0.4,
               ),
 
               const SizedBox(height: 20),
 
-              // -- Suku cadang favorit
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Suku cadang favorit',
-                    style: GoogleFonts.openSans(
-                      color: GlobalColors.textColor,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: GlobalColors.mainColor,
-                      minimumSize: const Size(80, 30),
-                      shadowColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text(
-                      'Lihat semua',
-                      style: GoogleFonts.openSans(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(height: 15),
-              SizedBox(
-                height: 233,
-                child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/cvt.jpg',
-                      productTitle: 'Cvt Yamaha X-ride',
-                      productPrice: '1.000.000',
-                      productCategory: 'motor',
-                      discount: '50',
-                    ),
-                    const SizedBox(width: 20),
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/ban_michellin.jpg',
-                      productTitle: 'Ban Michellin Pilot Ring',
-                      productPrice: '480.000',
-                      productCategory: 'motor',
-                      discount: '20',
-                    ),
-                    const SizedBox(width: 20),
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/ban_bridgestone.jpg',
-                      productTitle: 'Bridgestone Dueler',
-                      productPrice: '975.000',
-                      productCategory: 'mobil',
-                      discount: '35',
-                    ),
-                    const SizedBox(width: 20),
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/aki_gs.jpg',
-                      productTitle: 'Aki Mobil Innova Diesel',
-                      productPrice: '1.293.000',
-                      productCategory: 'mobil',
-                      discount: '40',
-                    ),
-                  ],
-                ),
+              // Suku cadang favorit
+              _buildSectionTitle('Suku cadang favorit'),
+              const SizedBox(height: 10),
+              _buildProductListFutureBuilder(
+                filter: (product) => product.rating > 4.6 && product.sold > 40,
               ),
 
               const SizedBox(height: 20),
 
-              // -- Promo hari ini
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Promo hari ini',
-                    style: GoogleFonts.openSans(
-                      color: GlobalColors.textColor,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: GlobalColors.mainColor,
-                      minimumSize: const Size(80, 30),
-                      shadowColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text(
-                      'Lihat semua',
-                      style: GoogleFonts.openSans(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(height: 15),
-              SizedBox(
-                height: 233,
-                child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/cvt.jpg',
-                      productTitle: 'Cvt Yamaha X-ride',
-                      productPrice: '1.000.000',
-                      productCategory: 'motor',
-                      discount: '50',
-                    ),
-                    const SizedBox(width: 20),
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/ban_michellin.jpg',
-                      productTitle: 'Ban Michellin Pilot Ring',
-                      productPrice: '480.000',
-                      productCategory: 'motor',
-                      discount: '20',
-                    ),
-                    const SizedBox(width: 20),
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/ban_bridgestone.jpg',
-                      productTitle: 'Bridgestone Dueler',
-                      productPrice: '975.000',
-                      productCategory: 'mobil',
-                      discount: '35',
-                    ),
-                    const SizedBox(width: 20),
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/aki_gs.jpg',
-                      productTitle: 'Aki Mobil Innova Diesel',
-                      productPrice: '1.293.000',
-                      productCategory: 'mobil',
-                      discount: '40',
-                    ),
-                  ],
-                ),
+              // Promo hari ini
+              _buildSectionTitle('Promo hari ini'),
+              const SizedBox(height: 10),
+              _buildProductListFutureBuilder(
+                filter: (product) => product.discount <= 0.3,
               ),
 
               const SizedBox(height: 20),
 
-              // -- Rekomendasi buat kamu
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Rekomendasi buat kamu',
-                    style: GoogleFonts.openSans(
-                      color: GlobalColors.textColor,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: GlobalColors.mainColor,
-                      minimumSize: const Size(80, 30),
-                      shadowColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text(
-                      'Lihat semua',
-                      style: GoogleFonts.openSans(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(height: 15),
-              SizedBox(
-                height: 233,
-                child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/cvt.jpg',
-                      productTitle: 'Cvt Yamaha X-ride',
-                      productPrice: '1.000.000',
-                      productCategory: 'motor',
-                      discount: '50',
-                    ),
-                    const SizedBox(width: 20),
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/ban_michellin.jpg',
-                      productTitle: 'Ban Michellin Pilot Ring',
-                      productPrice: '480.000',
-                      productCategory: 'motor',
-                      discount: '20',
-                    ),
-                    const SizedBox(width: 20),
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/ban_bridgestone.jpg',
-                      productTitle: 'Bridgestone Dueler',
-                      productPrice: '975.000',
-                      productCategory: 'mobil',
-                      discount: '35',
-                    ),
-                    const SizedBox(width: 20),
-                    ProductCard(
-                      onTap: () {},
-                      imageUrl: 'assets/img/product/aki_gs.jpg',
-                      productTitle: 'Aki Mobil Innova Diesel',
-                      productPrice: '1.293.000',
-                      productCategory: 'mobil',
-                      discount: '40',
-                    ),
-                  ],
-                ),
+              // Rekomendasi buat kamu
+              _buildSectionTitle('Rekomendasi buat kamu'),
+              const SizedBox(height: 10),
+              _buildProductListFutureBuilder(
+                filter: (product) => product.seller.sellerLocation == 'Kota Bandung',
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.openSans(
+            color: GlobalColors.textColor,
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: GlobalColors.mainColor,
+            minimumSize: const Size(80, 30),
+            shadowColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          child: Text(
+            'Lihat semua',
+            style: GoogleFonts.openSans(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProductListFutureBuilder({required bool Function(Product) filter}) {
+    return FutureBuilder<List<Product>>(
+      future: _productsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Skelton(
+            width: 145,
+            height: 145,
+          );
+        } else if (snapshot.hasError) {
+          print('Error: ${snapshot.hasError}');
+          return Center(
+            child: Text(
+              'Waduh, ada yang salah nih',
+              style: TextStyle(
+                fontFamily: 'Open Sans',
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: GlobalColors.textColor2,
+              ),
+            ),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(
+            child: Text(
+              'Waduh, produk gaada',
+              style: TextStyle(
+                fontFamily: 'Open Sans',
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: GlobalColors.textColor2,
+              ),
+            ),
+          );
+        } else {
+          final products = snapshot.data!.where(filter).toList();
+          return _buildProductList(products);
+        }
+      },
+    );
+  }
+
+  Widget _buildProductList(List<Product> products) {
+    return SizedBox(
+      height: 230,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: products.length,
+        separatorBuilder: (context, index) => const SizedBox(width: 20),
+        itemBuilder: (context, index) {
+          final product = products[index];
+          return ProductCard(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProductDetail(
+                    previousPage: 'ShopExplore',
+                    imageUrl: product.imageUrl,
+                    category: product.category,
+                    productTitle: product.productTitle,
+                    productActualPrice: product.price,
+                    rating: product.rating,
+                    userRating: product.userRating,
+                    userComment: product.userComment,
+                    review: product.review,
+                    reviewer: product.reviewer,
+                    sold: product.sold,
+                    discount: product.discount,
+                    descProduct: product.descProduct,
+                    sellerName: product.seller.sellerName,
+                    sellerImg: product.seller.sellerImg,
+                    sellerLocation: product.seller.sellerLocation,
+                    lastActive: timeAgo(product.seller.lastActive),
+                  ),
+                ),
+              );
+            },
+            imageUrl: product.imageUrl,
+            productTitle: product.productTitle,
+            productPrice: product.price.toString(),
+            productCategory: product.category,
+            discount: (product.discount * 100).toStringAsFixed(0),
+          );
+        },
       ),
     );
   }

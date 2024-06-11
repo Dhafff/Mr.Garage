@@ -54,6 +54,7 @@ class _LandingPageState extends State<LandingPage> {
         backgroundColor: Colors.transparent,
         titleSpacing: 0,
         toolbarHeight: 100,
+        automaticallyImplyLeading: false,
       ),
       body: Align(
         alignment: Alignment.center,
@@ -160,7 +161,7 @@ class _LandingPageState extends State<LandingPage> {
                                         );
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        minimumSize: const Size(165, 135),
+                                        minimumSize: Size(MediaQuery.of(context).size.width * 0.4, 135),
                                         backgroundColor: HexColor('eeeeee'),
                                         shadowColor: Colors.transparent,
                                         shape: RoundedRectangleBorder(
@@ -197,7 +198,7 @@ class _LandingPageState extends State<LandingPage> {
                                         );
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        minimumSize: const Size(165, 135),
+                                        minimumSize: Size(MediaQuery.of(context).size.width * 0.4, 135),
                                         backgroundColor: HexColor('eeeeee'),
                                         shadowColor: Colors.transparent,
                                         shape: RoundedRectangleBorder(

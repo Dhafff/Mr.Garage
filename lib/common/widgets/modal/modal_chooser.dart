@@ -66,7 +66,7 @@ class ModalChooser extends StatelessWidget {
                     ElevatedButton(
                       onPressed: onPressed1,
                       style: ElevatedButton.styleFrom(
-                        minimumSize: Size(MediaQuery.of(context).size.width, 135),
+                        minimumSize: Size(MediaQuery.of(context).size.width * 0.4, 135),
                         backgroundColor: HexColor('eeeeee'),
                         shadowColor: Colors.transparent,
                         shape: RoundedRectangleBorder(
@@ -96,7 +96,7 @@ class ModalChooser extends StatelessWidget {
                     ElevatedButton(
                       onPressed: onPressed2,
                       style: ElevatedButton.styleFrom(
-                        minimumSize: Size(MediaQuery.of(context).size.width, 135),
+                        minimumSize: Size(MediaQuery.of(context).size.width * 0.4, 135),
                         backgroundColor: HexColor('eeeeee'),
                         shadowColor: Colors.transparent,
                         shape: RoundedRectangleBorder(

@@ -5,6 +5,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:mr_garage/common/widgets/modal/modal_chooser_2.dart';
+import 'package:mr_garage/features/model/user.dart';
 import 'package:mr_garage/utils/global.colors.dart';
 import 'package:mr_garage/view/pelanggan/navbar/pelanggan_navbar.dart';
 
@@ -18,35 +19,11 @@ class PelangganProfile extends StatefulWidget {
 }
 
 class _PelangganProfileState extends State<PelangganProfile> {
-  String photoUrl = '';
-  User? user = FirebaseAuth.instance.currentUser;
+  final UserService _userService = UserService();
 
   @override
   void initState() {
     super.initState();
-    fetchPhotoUrl();
-  }
-
-  Future<void> fetchPhotoUrl() async {
-    String fetchedPhotoUrl = await getPhotoUrlFromFirestore();
-    setState(() {
-      photoUrl = fetchedPhotoUrl;
-    });
-  }
-
-  Future<String> getPhotoUrlFromFirestore() async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('Users').where('userId', isEqualTo: user?.uid).get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      var userDoc = querySnapshot.docs.first;
-      var userData = userDoc.data() as Map<String, dynamic>;
-      if (userData.containsKey('photoUrl')) {
-        return userData['photoUrl'];
-      }
-    }
-
-    return '';
   }
 
   @override
@@ -105,16 +82,7 @@ class _PelangganProfileState extends State<PelangganProfile> {
                               )
                             ],
                           ),
-                          child: CircleAvatar(
-                            radius: 60,
-                            backgroundColor: GlobalColors.garis,
-                            child: CircleAvatar(
-                              radius: 55,
-                              backgroundImage: photoUrl.isNotEmpty
-                                  ? NetworkImage(photoUrl) as ImageProvider
-                                  : const AssetImage('assets/img/icon/user-icon.jpg'),
-                            ),
-                          ),
+                          child: getPhotoUser(),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -562,6 +530,41 @@ class _PelangganProfileState extends State<PelangganProfile> {
           ),
         ),
       ),
+    );
+  }
+
+  FutureBuilder<UserModel?> getPhotoUser() {
+    return FutureBuilder<UserModel?>(
+      future: _userService.getCurrentUser(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return const Icon(Icons.error);
+        } else if (snapshot.hasData) {
+          UserModel? user = snapshot.data;
+          String photoUrl = user?.photoUrl ?? '';
+          return CircleAvatar(
+            radius: 60,
+            backgroundColor: GlobalColors.garis,
+            child: CircleAvatar(
+              radius: 55,
+              backgroundImage: photoUrl.isNotEmpty
+                  ? NetworkImage(photoUrl) as ImageProvider
+                  : const AssetImage('assets/img/icon/user-icon.jpg'),
+            ),
+          );
+        } else {
+          return CircleAvatar(
+            radius: 60,
+            backgroundColor: GlobalColors.garis,
+            child: const CircleAvatar(
+              radius: 55,
+              backgroundImage: AssetImage('assets/img/icon/user-icon.jpg'),
+            ),
+          );
+        }
+      },
     );
   }
 

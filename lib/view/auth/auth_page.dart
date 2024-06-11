@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:mr_garage/view/auth/landing.view.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/global.colors.dart';
 import '../montir/navbar/montir_navbar.dart';
 import '../pelanggan/navbar/pelanggan_navbar.dart';
+import '../../features/model/cart.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -38,27 +39,6 @@ class AuthPage extends StatelessWidget {
                 ],
               ),
             );
-          } else if (snapshot.hasError || !snapshot.data!) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.error,
-                    color: Colors.red,
-                    size: 50,
-                  ),
-                  const SizedBox(height: 15),
-                  Text(
-                    'Tidak ada koneksi internet',
-                    style: GoogleFonts.openSans(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
-            );
           } else {
             return StreamBuilder<User?>(
               stream: FirebaseAuth.instance.authStateChanges(),
@@ -83,7 +63,9 @@ class AuthPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               LoadingAnimationWidget.staggeredDotsWave(
-                                  color: GlobalColors.mainColor, size: 50),
+                                color: GlobalColors.mainColor,
+                                size: 50,
+                              ),
                             ],
                           ),
                         );
@@ -92,7 +74,7 @@ class AuthPage extends StatelessWidget {
                       if (userSnapshot.hasError) {
                         print('Terjadi kesalahan: ${userSnapshot.error}');
                         return const Center(
-                          child: Text('Terjadi kesalahan'),
+                          child: Text('Waduh ada yang salah nih :('),
                         );
                       }
 
@@ -103,7 +85,10 @@ class AuthPage extends StatelessWidget {
                         if (role == 'montir') {
                           return const MontirNavBar();
                         } else {
-                          return const PelangganNavBar();
+                          return ChangeNotifierProvider(
+                            create: (_) => CartProvider(snapshot.data!.uid),
+                            child: const PelangganNavBar(),
+                          );
                         }
                       } else {
                         return const LandingPage();

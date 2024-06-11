@@ -67,7 +67,7 @@ class _ProductCardState extends State<ProductCard> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 image: DecorationImage(
-                  image: AssetImage(widget.imageUrl),
+                  image: NetworkImage(widget.imageUrl),
                   fit: widget.fit,
                 ),
                 border: Border.all(width: 5, color: HexColor('f5f5f5')),
