@@ -22,14 +22,21 @@ class CartItem {
     required this.quantity,
   });
 
-  CartItem copy({String? id}) {
+  CartItem copy({
+    String? id,
+    String? imageUrl,
+    String? productTitle,
+    String? note,
+    int? price,
+    int? quantity,
+  }) {
     return CartItem(
       id: id ?? this.id,
-      imageUrl: imageUrl,
-      productTitle: productTitle,
-      note: note,
-      price: price,
-      quantity: quantity,
+      imageUrl: imageUrl ?? this.imageUrl,
+      productTitle: productTitle ?? this.productTitle,
+      note: note ?? this.note,
+      price: price ?? this.price,
+      quantity: quantity ?? this.quantity,
     );
   }
 }
@@ -79,5 +86,31 @@ class CartProvider extends ChangeNotifier {
     await FirebaseFirestore.instance.collection('ShopCart').doc(userId).collection('Items').doc(id).delete();
     _items.removeWhere((item) => item.id == id);
     notifyListeners();
+  }
+
+  Future<void> updateItem(CartItem updatedItem) async {
+    await FirebaseFirestore.instance
+        .collection('ShopCart')
+        .doc(userId)
+        .collection('Items')
+        .doc(updatedItem.id)
+        .update({
+      'id': updatedItem.id,
+      'imageUrl': updatedItem.imageUrl,
+      'productTitle': updatedItem.productTitle,
+      'note': updatedItem.note,
+      'price': updatedItem.price,
+      'quantity': updatedItem.quantity,
+    });
+
+    final index = _items.indexWhere((item) => item.id == updatedItem.id);
+    if (index != -1) {
+      _items[index] = updatedItem;
+      notifyListeners();
+    }
+  }
+
+  int get totalPrice {
+    return _items.fold(0, (sum, item) => sum + (item.price * item.quantity));
   }
 }

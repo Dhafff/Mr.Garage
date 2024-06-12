@@ -77,4 +77,35 @@ class UserService {
     }
     return null;
   }
+
+  Future<void> updateUserProfile({
+    required String userId,
+    String? username,
+    String? email,
+    String? photoUrl,
+  }) async {
+    final updates = <String, dynamic>{};
+
+    if (username != null) {
+      updates['username'] = username;
+    }
+
+    if (photoUrl != null) {
+      updates['photoUrl'] = photoUrl;
+    }
+
+    if (updates.isNotEmpty) {
+      await _firestore.collection('Users').doc(userId).update(updates);
+    }
+
+    if (email != null) {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        await user.updateEmail(email);
+        await _firestore.collection('Users').doc(user.uid).update({
+          'email': email,
+        });
+      }
+    }
+  }
 }
