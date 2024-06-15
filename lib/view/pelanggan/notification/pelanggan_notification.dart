@@ -3,12 +3,27 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:mr_garage/common/widgets/notification/notification_card.dart';
 
+import '../../../features/model/service.dart';
 import '../../../utils/global.colors.dart';
 import '../navbar/pelanggan_navbar.dart';
 
-class PelangganNotification extends StatelessWidget {
+class PelangganNotification extends StatefulWidget {
   const PelangganNotification({super.key});
 
+  @override
+  State<PelangganNotification> createState() => _PelangganNotificationState();
+
+
+}
+
+class _PelangganNotificationState extends State<PelangganNotification> {
+  late Future<List<ServiceRecord>> _futureServiceRecords;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureServiceRecords = ServiceRepository().getServiceRecords();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,8 +71,16 @@ class PelangganNotification extends StatelessWidget {
             height: 1,
           ),
         ),
-      ),
-      body: Align(
+      ), 
+      body: FutureBuilder<List<ServiceRecord>>(
+        future: _futureServiceRecords,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Align(
         alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -89,6 +112,22 @@ class PelangganNotification extends StatelessWidget {
             ),
           ],
         ),
+      );
+          } else {
+            List<ServiceRecord> records = snapshot.data!;
+            return ListView.builder(
+              itemCount: records.length,
+              itemBuilder: (context, index) {
+                ServiceRecord record = records[index];
+                return ListTile(
+                  title: Text(record.vehicle),
+                  subtitle: Text('${record.location} - ${record.date}'),
+                  trailing: Icon(record.onTime ? Icons.check : Icons.close),
+                );
+              },
+            );
+          }
+        },
       ),
     );
   }
