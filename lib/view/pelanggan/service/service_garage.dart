@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
 import '../../../common/widgets/button/primary_button.dart';
 import '../navbar/pelanggan_navbar.dart';
 
@@ -11,7 +11,18 @@ class ServiceGarage extends StatefulWidget {
 }
 
 class _ServiceGarageState extends State<ServiceGarage> {
-  // You can add other state variables here if needed
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  bool _onTime = false;
+
+  Future<void> storeToFirestore() async {
+    await FirebaseFirestore.instance.collection('servis').add({
+      'vehicle': 'X-ride 125',
+      'location': _locationController.text,
+      'date': _dateController.text,
+      'onTime': _onTime,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,10 +161,11 @@ class _ServiceGarageState extends State<ServiceGarage> {
                           ),
                         ],
                       ),
-                      const Padding(
-                        padding: EdgeInsets.all(16.0),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
                         child: TextField(
-                          decoration: InputDecoration(
+                          controller: _locationController,
+                          decoration: const InputDecoration(
                             labelText: 'Lokasi kamu',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
@@ -167,6 +179,7 @@ class _ServiceGarageState extends State<ServiceGarage> {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: TextFormField(
+                          controller: _dateController,
                           decoration: const InputDecoration(
                             labelText: 'Tanggal Servis',
                             border: OutlineInputBorder(
@@ -184,9 +197,11 @@ class _ServiceGarageState extends State<ServiceGarage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Checkbox(
-                              value: false,
+                              value: _onTime,
                               onChanged: (bool? value) {
-                                // Add functionality for checkbox
+                                setState(() {
+                                  _onTime = value ?? false;
+                                });
                               },
                             ),
                             const Flexible(
@@ -198,7 +213,7 @@ class _ServiceGarageState extends State<ServiceGarage> {
                           ],
                         ),
                       ),
-                      PrimaryButton("Servis", onPressed: () {})
+                      PrimaryButton("Servis", onPressed: storeToFirestore),
                     ],
                   ),
                 ),
