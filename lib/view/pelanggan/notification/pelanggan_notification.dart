@@ -12,8 +12,6 @@ class PelangganNotification extends StatefulWidget {
 
   @override
   State<PelangganNotification> createState() => _PelangganNotificationState();
-
-
 }
 
 class _PelangganNotificationState extends State<PelangganNotification> {
@@ -24,6 +22,7 @@ class _PelangganNotificationState extends State<PelangganNotification> {
     super.initState();
     _futureServiceRecords = ServiceRepository().getServiceRecords();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,48 +70,48 @@ class _PelangganNotificationState extends State<PelangganNotification> {
             height: 1,
           ),
         ),
-      ), 
+      ),
       body: FutureBuilder<List<ServiceRecord>>(
         future: _futureServiceRecords,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Align(
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/img/illustrator/vector_x.png',
-              width: 240,
-              height: 180,
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Belum ada notifikasi',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.openSans(
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-                color: GlobalColors.textColor,
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/img/illustrator/vector_x.png',
+                    width: 240,
+                    height: 180,
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Belum ada notifikasi',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.openSans(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                      color: GlobalColors.textColor,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    'Kalau udah servis atau belanja, notifikasinya\nbakal ditaruh di sini.',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.openSans(
+                      fontSize: 13,
+                      color: GlobalColors.thirdColor,
+                      height: 1.7,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 15),
-            Text(
-              'Kalau udah servis atau belanja, notifikasinya\nbakal ditaruh di sini.',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.openSans(
-                fontSize: 13,
-                color: GlobalColors.thirdColor,
-                height: 1.7,
-              ),
-            ),
-          ],
-        ),
-      );
+            );
           } else {
             List<ServiceRecord> records = snapshot.data!;
             return ListView.builder(
