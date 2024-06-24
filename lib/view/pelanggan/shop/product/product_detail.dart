@@ -525,6 +525,7 @@ class _ProductDetailState extends State<ProductDetail> {
               price: isDiscount ? widget.productDiscountPrice : widget.productActualPrice,
               quantity: quantity,
             );
+            Navigator.of(context).pop();
             addToCart(context, cartItem);
           },
           image: widget.imageUrl,
